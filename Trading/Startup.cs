@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,9 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Trading.Data;
 using Trading.Data.Models;
@@ -33,7 +36,27 @@ namespace Trading
             services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlServer(
                 Configuration.GetConnectionString("ConnectionString")));
-            services.AddScoped<IRepository<Balance, int>, BalanceRepository>();
+
+            //Repositories
+            services.AddTransient<IRepository<Balance, int>, BalanceRepository>();
+            services.AddTransient<IRepository<User, int>, UserRepository>();
+
+            //JWT Auth
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                });
+
             services.AddControllers();
         }
 
@@ -49,7 +72,9 @@ namespace Trading
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
+
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
