@@ -13,7 +13,6 @@ namespace Trading.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Currency> Currencies { get; set; }
 
-
         public DatabaseContext(DbContextOptions<DatabaseContext> options) 
             : base(options)
         {

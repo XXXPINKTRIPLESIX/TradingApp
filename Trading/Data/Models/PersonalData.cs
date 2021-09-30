@@ -9,23 +9,25 @@ namespace Trading.Data.Models
 {
     public class PersonalData
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //public int Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Surname { get; set; }
         public string PhoneNumber { get; set; }
         public string Description { get; set; }
 
-        public PersonalData(int id, string name, string lastname, string surname, string phoneNumber, string description )
+        public PersonalData(/*int id,*/ string name, string lastname, string surname, string phoneNumber, string description )
         {
-            Id = id;
+            //Id = id;
             Name = name;
             LastName = lastname;
             Surname = surname;
             PhoneNumber = phoneNumber;
             Description = description;
         }
+
+        private PersonalData() { }
     }
 }

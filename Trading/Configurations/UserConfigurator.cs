@@ -12,9 +12,21 @@ namespace Trading.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("User");
+            builder.ToTable("Users");
 
-            builder.OwnsOne(p => p.PersonalData);
+            builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).HasColumnName("id").IsRequired();
+            builder.Property(p => p.Login).HasColumnName("login").IsRequired();
+            builder.Property(p => p.Password).HasColumnName("password").IsRequired();
+            builder.Property(p => p.Email).HasColumnName("email").IsRequired();
+            builder.OwnsOne(p => p.PersonalData, parameter => 
+            {
+                parameter.Property(p => p.Name).HasColumnName("user_name").IsRequired();
+                parameter.Property(p => p.LastName).HasColumnName("user_last_name").IsRequired();
+                parameter.Property(p => p.Surname).HasColumnName("user_surname").IsRequired();
+                parameter.Property(p => p.PhoneNumber).HasColumnName("user_phone_number").IsRequired();
+                parameter.Property(p => p.Description).HasColumnName("user_description").IsRequired();
+            });
         }
     }
 }

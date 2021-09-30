@@ -9,8 +9,8 @@ namespace Trading.Data.Models
 {
     public class User
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
@@ -18,14 +18,16 @@ namespace Trading.Data.Models
         public PersonalData PersonalData { get; set; } = null;
         public List<Balance> Balances { get; set; }
 
-        public User(int id, string login, string password, string email, /*PersonalData personalData,*/ List<Balance> balances)
+        public User(int id, string login, string password, string email, PersonalData personalData, List<Balance> balances)
         {
             Id = id;
             Login = login;
             Password = password;
             Email = email;
             Balances = balances;
-            //PersonalData = personalData;
+            PersonalData = personalData;
         }
+
+        private User() { }
     }
 }

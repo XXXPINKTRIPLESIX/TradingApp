@@ -16,11 +16,11 @@ namespace Trading.Data.Models
         public Currency Currency { get; set; }
         public double Amount { get; set; }
 
-        public Balance(int  id, int currencyId, Currency currency, double amount)
+        public Balance(int  id, int currencyId, /*Currency currency,*/ double amount)
         {
             Id = id;
             CurrencyId = currencyId;
-            Currency = currency;
+            //Currency = currency;
             Amount = amount;
         }
         
