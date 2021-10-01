@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trading.Interfaces.Database;
+using Trading.ResponseModels;
 
 namespace Trading.Interfaces.Services
 {
-    public interface ICurrencyService<T>
+    public interface ICurrencyService
     {
-        Task<T> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount);
-        Task<T> Rates(string baseCurrencyCode);
+        Task<ExchangeResponse> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount);
+        Task<RatesResponse> Rates(string baseCurrencyCode);
     }
 }

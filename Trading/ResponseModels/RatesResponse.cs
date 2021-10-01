@@ -32,7 +32,7 @@ namespace Trading.ResponseModels
         [JsonProperty("base_code")]
         public string BaseCode { get; set; }
 
-        [JsonProperty("conversion_rates")]
-        public ConversionRates ConversionRates { get; set; }
+        //[JsonProperty("conversion_rates")]
+        //public ConversionRates ConversionRates { get; set; }
     }
 }
