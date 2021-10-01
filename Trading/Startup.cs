@@ -18,6 +18,8 @@ using Trading.Data;
 using Trading.Data.Models;
 using Trading.Data.Repository;
 using Trading.Interfaces.Database;
+using Trading.Interfaces.Services;
+using Trading.Services;
 
 namespace Trading
 {
@@ -40,6 +42,11 @@ namespace Trading
             //Repositories
             services.AddTransient<IRepository<Balance, int>, BalanceRepository>();
             services.AddTransient<IRepository<User, int>, UserRepository>();
+
+            //Services
+            services.AddTransient<ICurrencyService, FiatService>();
+
+            services.AddHttpClient("FiatExchangeApi");
 
             //JWT Auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Trading.Helpers;
 
 namespace Trading
 {
@@ -15,7 +14,6 @@ namespace Trading
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
-            ApiHelper.InitializeClient();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
