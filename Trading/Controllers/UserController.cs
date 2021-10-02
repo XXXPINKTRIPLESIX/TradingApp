@@ -23,13 +23,29 @@ namespace Trading.Controllers
             _userRepository = userRepository;
         }
         public async Task<List<User>> Get() { return await _userRepository.Get();} 
+
         [HttpGet("{id}")]
         public async Task<User> Get(int id) { return await _userRepository.Get(id); }
-        [HttpDelete("{id}")]
-        public async Task Delete(int id) { await _userRepository.Delete(id); }
+
+        [HttpGet("/delete/{id}")]
+        public async Task<StatusCodeResult> Delete(int id) 
+        { 
+            await _userRepository.Delete(id);
+            return new StatusCodeResult(200);
+        }
+
         [HttpPost]
-        public async Task Add(User user) { await _userRepository.Add(user); }
-        [HttpPost]
-        public async Task Update(User user) { await _userRepository.Update(user); }
+        public async Task<StatusCodeResult> Add(User user) 
+        { 
+            await _userRepository.Add(user);
+            return new StatusCodeResult(200);
+        }
+
+        [HttpPatch]
+        public async Task<StatusCodeResult> Update(User user) 
+        { 
+            await _userRepository.Update(user);
+            return new StatusCodeResult(200);
+        }
     }
 }
