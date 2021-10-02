@@ -16,7 +16,6 @@ namespace Trading.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IRepository<User, int> _userRepository;
         
-
         public UserController(ILogger<UserController> logger, IRepository<User, int> userRepository)
         {
             _logger = logger;
@@ -27,7 +26,7 @@ namespace Trading.Controllers
         [HttpGet("{id}")]
         public async Task<User> Get(int id) { return await _userRepository.Get(id); }
 
-        [HttpGet("/delete/{id}")]
+        [HttpDelete("/delete/{id}")]
         public async Task<StatusCodeResult> Delete(int id) 
         { 
             await _userRepository.Delete(id);
