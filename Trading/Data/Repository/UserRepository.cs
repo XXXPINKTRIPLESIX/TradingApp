@@ -12,12 +12,12 @@ namespace Trading.Data.Repository
     {
         public UserRepository(DatabaseContext databaseContext) : base(databaseContext) { }
 
-        public async override Task<User> Get(int id)
+        public async override Task<User> GetAsync(int id)
         {
             return await _databaseContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async override Task<List<User>> Get()
+        public async override Task<List<User>> GetAsync()
         {
             return await _databaseContext.Users.ToListAsync();
         }

@@ -21,29 +21,29 @@ namespace Trading.Controllers
             _logger = logger;
             _userRepository = userRepository;
         }
-        public async Task<List<User>> Get() { return await _userRepository.Get();} 
+        public async Task<List<User>> Get() { return await _userRepository.GetAsync();} 
 
         [HttpGet("{id}")]
-        public async Task<User> Get(int id) { return await _userRepository.Get(id); }
+        public async Task<User> Get(int id) { return await _userRepository.GetAsync(id); }
 
         [HttpDelete("/delete/{id}")]
         public async Task<StatusCodeResult> Delete(int id) 
         { 
-            await _userRepository.Delete(id);
+            await _userRepository.DeleteAsync(id);
             return new StatusCodeResult(200);
         }
 
         [HttpPost]
         public async Task<StatusCodeResult> Add(User user) 
         { 
-            await _userRepository.Add(user);
+            await _userRepository.AddAsync(user);
             return new StatusCodeResult(200);
         }
 
         [HttpPatch]
         public async Task<StatusCodeResult> Update(User user) 
         { 
-            await _userRepository.Update(user);
+            await _userRepository.UpdateAsync(user);
             return new StatusCodeResult(200);
         }
     }

@@ -42,9 +42,10 @@ namespace Trading
             //Repositories
             services.AddTransient<IRepository<Balance, int>, BalanceRepository>();
             services.AddTransient<IRepository<User, int>, UserRepository>();
+            services.AddTransient<IRepository<Currency, int>, CurrencyRepository>();
 
             //Services
-            services.AddTransient<ICurrencyService, FiatService>();
+            services.AddTransient<ICurrencyService, FiatCurrencyService>();
 
             services.AddHttpClient("FiatExchangeApi");
 

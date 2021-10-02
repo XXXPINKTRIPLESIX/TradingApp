@@ -9,15 +9,16 @@ using Microsoft.Extensions.Configuration;
 
 namespace Trading.Services
 {
-    public class FiatService : ICurrencyService
+    public class FiatCurrencyService : ICurrencyService
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
-        public FiatService(IConfiguration configuration, IHttpClientFactory clientFactory)
+        public FiatCurrencyService(IConfiguration configuration, IHttpClientFactory clientFactory)
         {
             _configuration = configuration;
             _httpClient = clientFactory.CreateClient("FiatExchangeApi");
         }
+
         public async Task<ExchangeResponse> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
         {
             string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/pair/{baseCurrencyCode}/{subCurrencyCode}/{amount}";

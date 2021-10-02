@@ -26,7 +26,7 @@ namespace Trading.Data
 
             base.OnModelCreating(builder);
 
-            builder.Entity<User>().HasData(new User(1, "111", "111", "111@gmail.com", null
+            builder.Entity<User>().HasData(new User(1, "111", "111", "3343333@gmail.com", null
                /* new PersonalData("name111", "lastname111", "surname111", "+380", "Desc111")*/, null));
             //builder.Entity<User>().HasData(new User {Id = 1, Login = "111", Password = "111", Email = "111@gmail.com", Balances = null, PersonalData = null });
         }

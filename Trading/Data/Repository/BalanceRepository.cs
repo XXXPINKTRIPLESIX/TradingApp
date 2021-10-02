@@ -12,12 +12,12 @@ namespace Trading.Data.Repository
     {
         public BalanceRepository(DatabaseContext databaseContext) : base(databaseContext) { }
 
-        public async override Task<Balance> Get(int id)
+        public async override Task<Balance> GetAsync(int id)
         {
             return await _databaseContext.Balances.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async override Task<List<Balance>> Get()
+        public async override Task<List<Balance>> GetAsync()
         {
             return await _databaseContext.Balances.ToListAsync();
         }

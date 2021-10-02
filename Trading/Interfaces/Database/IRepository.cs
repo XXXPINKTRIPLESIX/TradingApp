@@ -7,11 +7,11 @@ namespace Trading.Interfaces.Database
 {
     public interface IRepository<T, TId> where T : class
     {
-        public Task Add(T t);
-        public Task<T> Get(TId id);
-        public Task<List<T>> Get();
-        public Task Update(T t);
-        public Task Delete(T t);
-        public Task Delete(TId id);
+        public Task AddAsync(T t);
+        public Task<T> GetAsync(TId id);
+        public Task<List<T>> GetAsync();
+        public Task UpdateAsync(T t);
+        public Task DeleteAsync(T t);
+        public Task DeleteAsync(TId id);
     }
 }
