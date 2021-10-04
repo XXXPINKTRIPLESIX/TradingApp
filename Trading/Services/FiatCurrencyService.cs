@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Trading.Interfaces.Services;
-using Trading.ResponseModels;
 using Microsoft.Extensions.Configuration;
+using Trading.DTO.Fiat;
 
 namespace Trading.Services
 {
@@ -19,27 +19,27 @@ namespace Trading.Services
             _httpClient = clientFactory.CreateClient("FiatExchangeApi");
         }
 
-        public async Task<ExchangeResponse> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
+        public async Task<FiatExchangeDTO> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
         {
             string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/pair/{baseCurrencyCode}/{subCurrencyCode}/{amount}";
 
             using(HttpResponseMessage response = await _httpClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadAsAsync<ExchangeResponse>();
+                    return await response.Content.ReadAsAsync<FiatExchangeDTO>();
                 else
                     throw new NotImplementedException();
             }
         }
 
-        public async Task<RatesResponse> Rates(string baseCurrencyCode)
+        public async Task<FiatRateDTO> Rates(string baseCurrencyCode)
         {
             string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/latest/{baseCurrencyCode}";
 
             using (HttpResponseMessage response = await _httpClient.GetAsync(url)) 
             {
                 if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadAsAsync<RatesResponse>();
+                    return await response.Content.ReadAsAsync<FiatRateDTO>();
                 else
                     throw new NotImplementedException();
             }

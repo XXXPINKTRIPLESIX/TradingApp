@@ -46,6 +46,7 @@ namespace Trading
 
             //Services
             services.AddTransient<ICurrencyService, FiatCurrencyService>();
+           // services.AddTransient<ICurrencyService<CryproRateDTO>, CryptoCurrencyService>();
 
             services.AddHttpClient("FiatExchangeApi");
 

@@ -21,13 +21,33 @@ namespace Trading.Controllers
             _logger = logger;
             _userRepository = userRepository;
         }
-        public async Task<List<User>> Get() { return await _userRepository.GetAsync();} 
+        public async Task<IActionResult> Get() 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var users = await _userRepository.GetAsync();
+
+            if (users == null)
+                return NotFound();
+            return Ok(users);
+        } 
 
         [HttpGet("{id}")]
-        public async Task<User> Get(int id) { return await _userRepository.GetAsync(id); }
+        public async Task<IActionResult> Get(int id) 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userRepository.GetAsync(id);
+
+            if (user == null)
+                return NotFound();
+            return Ok(user);
+        }
 
         [HttpDelete("/delete/{id}")]
-        public async Task<StatusCodeResult> Delete(int id) 
+        public async Task<IActionResult> Delete(int id) 
         { 
             await _userRepository.DeleteAsync(id);
             return new StatusCodeResult(200);

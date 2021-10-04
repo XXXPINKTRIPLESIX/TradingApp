@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Trading.Data.Models;
 using Trading.Interfaces.Database;
 using Trading.Interfaces.Services;
-using Trading.ResponseModels;
+using Trading.DTO.Fiat;
 
 namespace Trading.Controllers
 {
@@ -27,7 +27,18 @@ namespace Trading.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Currency>> Get() { return await _currencyRepository.GetAsync(); }
+        public async Task<IActionResult> Get() 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
+            var currencies = await _currencyRepository.GetAsync();
+
+            if (currencies == null)
+                return NotFound();
+
+            return Ok(currencies);
+        }
 
         [HttpGet("{id}")]
         public async Task<Currency> Get(int id) { return await _currencyRepository.GetAsync(id); }
@@ -54,13 +65,13 @@ namespace Trading.Controllers
         }
 
         [HttpGet("{baseCurrency}/{subCurrency}/{amount}")]
-        public async Task<ExchangeResponse> Exchange(string baseCurrency, string subCurrency, double amount) 
+        public async Task<FiatExchangeDTO> Exchange(string baseCurrency, string subCurrency, double amount) 
         { 
             return await _currencyService.Exchange(baseCurrency, subCurrency, amount); 
         }
 
         [HttpGet("{baseCurrency}")]
-        public async Task<RatesResponse> CurrencyRate(string baseCurrency) 
+        public async Task<FiatRateDTO> CurrencyRate(string baseCurrency) 
         {
             return await _currencyService.Rates(baseCurrency);
         }
