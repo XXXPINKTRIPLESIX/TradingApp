@@ -41,39 +41,84 @@ namespace Trading.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<Currency> Get(int id) { return await _currencyRepository.GetAsync(id); }
+        public async Task<IActionResult> Get([FromRoute] int id) 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var res = await _currencyRepository.GetAsync(id);
+
+            if (res == null)
+                return NotFound();
+
+            return Ok(res);
+        }
 
         [HttpDelete("{id}")]
-        public async Task<StatusCodeResult> Delete(int id) 
+        public async Task<IActionResult> Delete([FromRoute] int id) 
         {
-            await _currencyRepository.DeleteAsync(id);
-            return new StatusCodeResult(200);
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var res = await _currencyRepository.DeleteAsync(id);
+
+            if (res == null)
+                return NotFound();
+
+            return Ok(res);
         }
 
         [HttpPost]
-        public async Task<StatusCodeResult> Add(Currency currency)
+        public async Task<IActionResult> Add([FromBody] Currency currency)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             await _currencyRepository.AddAsync(currency);
-            return new StatusCodeResult(200);
+
+            return NoContent();
         }
 
         [HttpPatch]
-        public async Task<StatusCodeResult> Update(Currency currency) 
+        public async Task<IActionResult> Update(Currency currency) 
         {
-            await _currencyRepository.UpdateAsync(currency);
-            return new StatusCodeResult(200);
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var res = await _currencyRepository.UpdateAsync(currency);
+
+            if (res == null)
+                return NotFound();
+
+            return Ok(res);
         }
 
         [HttpGet("{baseCurrency}/{subCurrency}/{amount}")]
-        public async Task<FiatExchangeDTO> Exchange(string baseCurrency, string subCurrency, double amount) 
-        { 
-            return await _currencyService.Exchange(baseCurrency, subCurrency, amount); 
+        public async Task<IActionResult> Exchange([FromRoute] string baseCurrency, [FromRoute]string subCurrency, [FromRoute] double amount) 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var res = await _currencyService.Exchange(baseCurrency, subCurrency, amount);
+
+            if (res == null)
+                return NotFound();
+
+            return Ok(res);
         }
 
         [HttpGet("{baseCurrency}")]
-        public async Task<FiatRateDTO> CurrencyRate(string baseCurrency) 
+        public async Task<IActionResult> CurrencyRate([FromRoute] string baseCurrency) 
         {
-            return await _currencyService.Rates(baseCurrency);
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var res = await _currencyService.Rates(baseCurrency);
+
+            if (res == null)
+                return NotFound();
+
+            return Ok(res);
         }
     }
 }

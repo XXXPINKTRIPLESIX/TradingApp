@@ -10,8 +10,8 @@ namespace Trading.Interfaces.Database
         public Task AddAsync(T t);
         public Task<T> GetAsync(TId id);
         public Task<List<T>> GetAsync();
-        public Task UpdateAsync(T t);
-        public Task DeleteAsync(T t);
-        public Task DeleteAsync(TId id);
+        public Task<T> UpdateAsync(T t);
+        public Task<T> DeleteAsync(T t);
+        public Task<T> DeleteAsync(TId id);
     }
 }

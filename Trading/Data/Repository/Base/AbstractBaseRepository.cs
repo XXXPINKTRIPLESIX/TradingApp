@@ -26,22 +26,39 @@ namespace Trading.Data.Repository.Base
             await _databaseContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(T t)
+        public async Task<T> DeleteAsync(T t)
         {
+            if (t == null)
+                return null;
+
             _databaseContext.Entry(t).State = EntityState.Deleted;
             await _databaseContext.SaveChangesAsync();
+
+            return t;
         }
 
-        public async Task DeleteAsync(TId id)
+        public async Task<T> DeleteAsync(TId id)
         {
-            _databaseContext.Entry(GetAsync(id)).State = EntityState.Deleted;
+            T entity = await GetAsync(id);
+
+            if (entity == null)
+                return null;
+
+            _databaseContext.Entry(entity).State = EntityState.Deleted;
             await _databaseContext.SaveChangesAsync();
+
+            return entity;
         }
 
-        public async Task UpdateAsync(T t)
+        public async Task<T> UpdateAsync(T t)
         {
+            if (t == null)
+                return null;
+
             _databaseContext.Entry(t).State = EntityState.Modified;
             await _databaseContext.SaveChangesAsync();
+
+            return t;
         }
     }
 }

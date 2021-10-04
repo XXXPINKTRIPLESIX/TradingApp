@@ -26,45 +26,63 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var users = await _userRepository.GetAsync();
+            var res = await _userRepository.GetAsync();
 
-            if (users == null)
+            if (res == null)
                 return NotFound();
-            return Ok(users);
+            return Ok(res);
         } 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id) 
+        public async Task<IActionResult> Get([FromRoute] int id) 
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _userRepository.GetAsync(id);
+            var res = await _userRepository.GetAsync(id);
 
-            if (user == null)
+            if (res == null)
                 return NotFound();
-            return Ok(user);
+            return Ok(res);
         }
 
         [HttpDelete("/delete/{id}")]
-        public async Task<IActionResult> Delete(int id) 
-        { 
-            await _userRepository.DeleteAsync(id);
-            return new StatusCodeResult(200);
+        public async Task<IActionResult> Delete([FromRoute]int id) 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var res = await _userRepository.DeleteAsync(id);
+
+            if (res == null)
+                return NotFound();
+
+            return Ok(res);
         }
 
         [HttpPost]
-        public async Task<StatusCodeResult> Add(User user) 
-        { 
+        public async Task<IActionResult> Add([FromBody] User user) 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             await _userRepository.AddAsync(user);
-            return new StatusCodeResult(200);
+
+            return NoContent();
         }
 
         [HttpPatch]
-        public async Task<StatusCodeResult> Update(User user) 
-        { 
-            await _userRepository.UpdateAsync(user);
-            return new StatusCodeResult(200);
+        public async Task<IActionResult> Update(User user) 
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var res = await _userRepository.UpdateAsync(user);
+
+            if (res == null)
+                return NotFound();
+
+            return Ok(res);
         }
     }
 }
