@@ -7,7 +7,7 @@ namespace Trading.Data.Models
 {
     public enum CurrencyType
     {
-        Fiat,
-        Crypto
+        Fiat = 1,
+        Crypto = 2
     }
 }

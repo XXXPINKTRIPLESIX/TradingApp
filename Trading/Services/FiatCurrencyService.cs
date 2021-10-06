@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Trading.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
-using Trading.DTO.Fiat;
+using Trading.DTO.Response.Fiat;
 
 namespace Trading.Services
 {
@@ -16,30 +16,30 @@ namespace Trading.Services
         public FiatCurrencyService(IConfiguration configuration, IHttpClientFactory clientFactory)
         {
             _configuration = configuration;
-            _httpClient = clientFactory.CreateClient("FiatExchangeApi");
+            _httpClient = clientFactory.CreateClient();
         }
 
-        public async Task<FiatExchangeDTO> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
+        public async Task<FiatResponseExchangeDTO> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
         {
             string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/pair/{baseCurrencyCode}/{subCurrencyCode}/{amount}";
 
             using(HttpResponseMessage response = await _httpClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadAsAsync<FiatExchangeDTO>();
+                    return await response.Content.ReadAsAsync<FiatResponseExchangeDTO>();
                 else
                     throw new NotImplementedException();
             }
         }
 
-        public async Task<FiatRateDTO> Rates(string baseCurrencyCode)
+        public async Task<FiatResponseRateDTO> Rates(string baseCurrencyCode)
         {
             string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/latest/{baseCurrencyCode}";
 
             using (HttpResponseMessage response = await _httpClient.GetAsync(url)) 
             {
                 if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadAsAsync<FiatRateDTO>();
+                    return await response.Content.ReadAsAsync<FiatResponseRateDTO>();
                 else
                     throw new NotImplementedException();
             }

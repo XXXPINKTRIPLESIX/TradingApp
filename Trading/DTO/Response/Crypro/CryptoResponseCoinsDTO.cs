@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Trading.DTO.Crypro
+namespace Trading.DTO.Response.Crypro
 {
-    public class CryptoCoinsDTO
+    public class CryptoResponseCoinsDTO
     {
         [JsonProperty("id")]
         public string Id { get; set; }

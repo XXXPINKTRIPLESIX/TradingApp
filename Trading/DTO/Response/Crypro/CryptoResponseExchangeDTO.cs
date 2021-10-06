@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Trading.DTO.Crypro
+namespace Trading.DTO.Response.Crypro
 {
-    public class CryptoExchangeDTO
+    public class CryptoResponseExchangeDTO
     {
     }
 }

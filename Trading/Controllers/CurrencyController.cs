@@ -1,18 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trading.Data.Models;
+using Trading.DTO.Request;
 using Trading.Interfaces.Database;
 using Trading.Interfaces.Services;
-using Trading.DTO.Fiat;
 
 namespace Trading.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+
     public class CurrencyController : ControllerBase
     {
         private readonly ILogger<CurrencyController> _logger;
@@ -58,7 +60,7 @@ namespace Trading.Controllers
         public async Task<IActionResult> Delete([FromRoute] int id) 
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
             var res = await _currencyRepository.DeleteAsync(id);
 
@@ -72,7 +74,7 @@ namespace Trading.Controllers
         public async Task<IActionResult> Add([FromBody] Currency currency)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
             await _currencyRepository.AddAsync(currency);
 
@@ -80,10 +82,10 @@ namespace Trading.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> Update(Currency currency) 
+        public async Task<IActionResult> Update([FromBody]Currency currency) 
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
             var res = await _currencyRepository.UpdateAsync(currency);
 
@@ -93,13 +95,14 @@ namespace Trading.Controllers
             return Ok(res);
         }
 
-        [HttpGet("{baseCurrency}/{subCurrency}/{amount}")]
-        public async Task<IActionResult> Exchange([FromRoute] string baseCurrency, [FromRoute]string subCurrency, [FromRoute] double amount) 
+        [HttpPost]
+        [Route("Exchange")]
+        public async Task<IActionResult> Exchange([FromBody] FiatRequestExchangeDTO exchangeDTO)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
-            var res = await _currencyService.Exchange(baseCurrency, subCurrency, amount);
+            var res = await _currencyService.Exchange(exchangeDTO.BaseCurrency, exchangeDTO.TargetCurrency, exchangeDTO.Amount);
 
             if (res == null)
                 return NotFound();
@@ -107,11 +110,12 @@ namespace Trading.Controllers
             return Ok(res);
         }
 
-        [HttpGet("{baseCurrency}")]
-        public async Task<IActionResult> CurrencyRate([FromRoute] string baseCurrency) 
+        [HttpPost]
+        [Route("Rate")]
+        public async Task<IActionResult> CurrencyRate([FromQuery] string baseCurrency)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
             var res = await _currencyService.Rates(baseCurrency);
 

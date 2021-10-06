@@ -50,7 +50,7 @@ namespace Trading.Controllers
         public async Task<IActionResult> Delete([FromRoute]int id) 
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
             var res = await _userRepository.DeleteAsync(id);
 
@@ -64,7 +64,7 @@ namespace Trading.Controllers
         public async Task<IActionResult> Add([FromBody] User user) 
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
             await _userRepository.AddAsync(user);
 
@@ -75,7 +75,7 @@ namespace Trading.Controllers
         public async Task<IActionResult> Update(User user) 
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
             var res = await _userRepository.UpdateAsync(user);
 

@@ -8,16 +8,16 @@ using Trading.Data.Repository.Base;
 
 namespace Trading.Data.Repository
 {
-    public class BalanceRepository : AbstractBaseRepository<Balance, int>
+    public class BalanceRepository : AbstractBaseRepository<MoneyAccount, int>
     {
         public BalanceRepository(DatabaseContext databaseContext) : base(databaseContext) { }
 
-        public async override Task<Balance> GetAsync(int id)
+        public async override Task<MoneyAccount> GetAsync(int id)
         {
             return await _databaseContext.Balances.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async override Task<List<Balance>> GetAsync()
+        public async override Task<List<MoneyAccount>> GetAsync()
         {
             return await _databaseContext.Balances.ToListAsync();
         }

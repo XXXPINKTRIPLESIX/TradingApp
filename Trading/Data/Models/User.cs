@@ -16,9 +16,9 @@ namespace Trading.Data.Models
         public string Password { get; set; }
         public string  Email { get; set; }
         public PersonalData PersonalData { get; set; } = null;
-        public List<Balance> Balances { get; set; }
+        public List<MoneyAccount> Balances { get; set; }
 
-        public User(int id, string login, string password, string email, PersonalData personalData, List<Balance> balances)
+        public User(int id, string login, string password, string email, PersonalData personalData, List<MoneyAccount> balances)
         {
             Id = id;
             Login = login;

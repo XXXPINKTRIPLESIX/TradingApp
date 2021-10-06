@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Trading.Fiat.DTO
+namespace Trading.DTO.Response.Fiat
 {
-    public class ErrorResponse
+    public class FiatResponseErrorDto
     {
         [JsonProperty("result")]
         public string Result { get; set; }

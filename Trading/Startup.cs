@@ -40,7 +40,7 @@ namespace Trading
                 Configuration.GetConnectionString("ConnectionString")));
 
             //Repositories
-            services.AddTransient<IRepository<Balance, int>, BalanceRepository>();
+            services.AddTransient<IRepository<MoneyAccount, int>, BalanceRepository>();
             services.AddTransient<IRepository<User, int>, UserRepository>();
             services.AddTransient<IRepository<Currency, int>, CurrencyRepository>();
 
@@ -48,7 +48,7 @@ namespace Trading
             services.AddTransient<ICurrencyService, FiatCurrencyService>();
            // services.AddTransient<ICurrencyService<CryproRateDTO>, CryptoCurrencyService>();
 
-            services.AddHttpClient("FiatExchangeApi");
+            services.AddHttpClient();
 
             //JWT Auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -66,7 +66,10 @@ namespace Trading
                     };
                 });
 
-            services.AddControllers();
+            services.AddControllers().ConfigureApiBehaviorOptions(options => 
+            {
+                options.SuppressInferBindingSourcesForParameters = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
