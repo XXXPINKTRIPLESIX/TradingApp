@@ -40,9 +40,10 @@ namespace Trading
                 Configuration.GetConnectionString("ConnectionString")));
 
             //Repositories
-            services.AddTransient<IRepository<MoneyAccount, int>, BalanceRepository>();
+            services.AddTransient<IRepository<Account, int>, AccountRepository>();
             services.AddTransient<IRepository<User, int>, UserRepository>();
             services.AddTransient<IRepository<Currency, int>, CurrencyRepository>();
+            services.AddTransient<IRepository<Account, int>, AccountRepository>();
 
             //Services
             services.AddTransient<ICurrencyService, FiatCurrencyService>();

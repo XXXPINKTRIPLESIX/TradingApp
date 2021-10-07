@@ -10,7 +10,7 @@ namespace Trading.Data
 {
     public class DatabaseContext : DbContext
     {
-        public DbSet<MoneyAccount> Balances { get; set; }
+        public DbSet<Account> Balances { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Currency> Currencies { get; set; }
 

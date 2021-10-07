@@ -31,9 +31,6 @@ namespace Trading.Controllers
         [HttpGet]
         public async Task<IActionResult> Get() 
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            
             var currencies = await _currencyRepository.GetAsync();
 
             if (currencies == null)

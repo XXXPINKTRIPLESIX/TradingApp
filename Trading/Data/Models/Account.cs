@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Trading.Data.Models
 {
-    public class MoneyAccount
+    public class Account
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,7 +16,7 @@ namespace Trading.Data.Models
         public Currency Currency { get; set; }
         public double Amount { get; set; }
 
-        public MoneyAccount(int  id, int currencyId, Currency currency, double amount)
+        public Account(int  id, int currencyId, Currency currency, double amount)
         {
             Id = id;
             CurrencyId = currencyId;
@@ -24,6 +24,6 @@ namespace Trading.Data.Models
             Amount = amount;
         }
 
-        private MoneyAccount() { }
+        private Account() { }
     }
 }
