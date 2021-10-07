@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Trading.Data.Models
+namespace Trading.DTO.Response.Crypro
 {
-    public enum CurrencyType
+    public class CryptoResponseExchangeDTO
     {
-        Fiat = 1,
-        Crypto = 2
     }
 }

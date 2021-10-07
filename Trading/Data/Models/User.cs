@@ -9,17 +9,25 @@ namespace Trading.Data.Models
 {
     public class User
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public PersonalData PersonalData { get; set; }
-        public List<Balance> Balances { get; set; }
+        public string Login { get; set; }
+        public string Password { get; set; }
+        public string  Email { get; set; }
+        public PersonalData PersonalData { get; set; } = null;
+        public List<MoneyAccount> Balances { get; set; }
 
-        public User(int id, PersonalData personalData, List<Balance> balances)
+        public User(int id, string login, string password, string email, PersonalData personalData, List<MoneyAccount> balances)
         {
             Id = id;
-            PersonalData = personalData;
+            Login = login;
+            Password = password;
+            Email = email;
             Balances = balances;
+            PersonalData = personalData;
         }
+
+        private User() { }
     }
 }

@@ -16,32 +16,49 @@ namespace Trading.Data.Repository.Base
             _databaseContext = databaseContext;
         }
 
-        public abstract Task<T> Get(TId id);
+        public abstract Task<T> GetAsync(TId id);
 
-        public abstract Task<List<T>> Get();
+        public abstract Task<List<T>> GetAsync();
 
-        public async Task Add(T t)
+        public async Task AddAsync(T t)
         {
             _databaseContext.Entry(t).State = EntityState.Added;
             await _databaseContext.SaveChangesAsync();
         }
 
-        public async Task Delete(T t)
+        public async Task<T> DeleteAsync(T t)
         {
+            if (t == null)
+                return null;
+
             _databaseContext.Entry(t).State = EntityState.Deleted;
             await _databaseContext.SaveChangesAsync();
+
+            return t;
         }
 
-        public async Task Delete(TId id)
+        public async Task<T> DeleteAsync(TId id)
         {
-            _databaseContext.Entry(Get(id)).State = EntityState.Deleted;
+            T entity = await GetAsync(id);
+
+            if (entity == null)
+                return null;
+
+            _databaseContext.Entry(entity).State = EntityState.Deleted;
             await _databaseContext.SaveChangesAsync();
+
+            return entity;
         }
 
-        public async Task Update(T t)
+        public async Task<T> UpdateAsync(T t)
         {
+            if (t == null)
+                return null;
+
             _databaseContext.Entry(t).State = EntityState.Modified;
             await _databaseContext.SaveChangesAsync();
+
+            return t;
         }
     }
 }

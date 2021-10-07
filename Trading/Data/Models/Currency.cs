@@ -20,5 +20,6 @@ namespace Trading.Data.Models
             CurrencyCode = currencyCode;
             Type = type;
         }
+        private Currency() { }
     }
 }
