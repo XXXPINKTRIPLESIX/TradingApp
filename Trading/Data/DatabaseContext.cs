@@ -10,7 +10,7 @@ namespace Trading.Data
 {
     public class DatabaseContext : DbContext
     {
-        public DbSet<MoneyAccount> Balances { get; set; }
+        public DbSet<Account> Balances { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Currency> Currencies { get; set; }
 
@@ -26,9 +26,23 @@ namespace Trading.Data
 
             base.OnModelCreating(builder);
 
-            builder.Entity<User>().HasData(new User(1, "111", "111", "3343333@gmail.com", null
+            builder.Entity<User>().HasData(new User(1, "111", "111", "111@gmail.com", null
                /* new PersonalData("name111", "lastname111", "surname111", "+380", "Desc111")*/, null));
             //builder.Entity<User>().HasData(new User {Id = 1, Login = "111", Password = "111", Email = "111@gmail.com", Balances = null, PersonalData = null });
+            builder.Entity<User>().HasData(new User(2, "222", "222", "222@gmail.com", null, null));
+            builder.Entity<User>().HasData(new User(3, "333", "333", "333@gmail.com", null, null));
+            builder.Entity<User>().HasData(new User(4, "444", "444", "444@gmail.com", null, null));
+            builder.Entity<User>().HasData(new User(5, "555", "555", "555@gmail.com", null, null));
+            builder.Entity<User>().HasData(new User(6, "666", "666", "666@gmail.com", null, null));
+
+            builder.Entity<Currency>().HasData(new Currency(1, "USD", CurrencyType.Fiat));
+            builder.Entity<Currency>().HasData(new Currency(2, "EUR", CurrencyType.Fiat));
+            builder.Entity<Currency>().HasData(new Currency(3, "UAH", CurrencyType.Fiat));
+            builder.Entity<Currency>().HasData(new Currency(4, "RUB", CurrencyType.Fiat));
+
+            builder.Entity<Currency>().HasData(new Currency(5, "BTC", CurrencyType.Crypto));
+            builder.Entity<Currency>().HasData(new Currency(6, "ETH", CurrencyType.Crypto));
+            builder.Entity<Currency>().HasData(new Currency(7, "CryproName", CurrencyType.Crypto));
         }
     }
 }

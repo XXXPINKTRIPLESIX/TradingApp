@@ -21,11 +21,10 @@ namespace Trading.Controllers
             _logger = logger;
             _userRepository = userRepository;
         }
+
+        [HttpGet]
         public async Task<IActionResult> Get() 
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var res = await _userRepository.GetAsync();
 
             if (res == null)
@@ -46,7 +45,7 @@ namespace Trading.Controllers
             return Ok(res);
         }
 
-        [HttpDelete("/delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute]int id) 
         {
             if (!ModelState.IsValid)
@@ -56,7 +55,6 @@ namespace Trading.Controllers
 
             if (res == null)
                 return NotFound();
-
             return Ok(res);
         }
 
@@ -72,7 +70,7 @@ namespace Trading.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> Update(User user) 
+        public async Task<IActionResult> Update([FromBody]User user) 
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -81,7 +79,6 @@ namespace Trading.Controllers
 
             if (res == null)
                 return NotFound();
-
             return Ok(res);
         }
     }

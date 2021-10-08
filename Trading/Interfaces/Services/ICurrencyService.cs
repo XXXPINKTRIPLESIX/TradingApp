@@ -9,7 +9,7 @@ namespace Trading.Interfaces.Services
 {
     public interface ICurrencyService
     {
-        Task<FiatResponseExchangeDTO> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount);
-        Task<FiatResponseRateDTO> Rates(string baseCurrencyCode);
+        Task<CoupledResponseDTO> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount);
+        Task<CoupledResponseDTO> Rates(string baseCurrencyCode);
     }
 }

@@ -14,7 +14,6 @@ namespace Trading.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-
     public class CurrencyController : ControllerBase
     {
         private readonly ILogger<CurrencyController> _logger;
@@ -29,11 +28,8 @@ namespace Trading.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get() 
+        public async Task<IActionResult> Get()
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            
             var currencies = await _currencyRepository.GetAsync();
 
             if (currencies == null)
@@ -43,7 +39,7 @@ namespace Trading.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id) 
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -57,7 +53,7 @@ namespace Trading.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id) 
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -82,7 +78,7 @@ namespace Trading.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> Update([FromBody]Currency currency) 
+        public async Task<IActionResult> Update([FromBody] Currency currency)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -104,10 +100,10 @@ namespace Trading.Controllers
 
             var res = await _currencyService.Exchange(exchangeDTO.BaseCurrency, exchangeDTO.TargetCurrency, exchangeDTO.Amount);
 
-            if (res == null)
-                return NotFound();
-
-            return Ok(res);
+            if (res.SuccessResponse == null)
+                return BadRequest(res.ErrorResponse); 
+                                                           
+            return Ok(res.SuccessResponse);                
         }
 
         [HttpPost]
@@ -119,10 +115,10 @@ namespace Trading.Controllers
 
             var res = await _currencyService.Rates(baseCurrency);
 
-            if (res == null)
-                return NotFound();
+            if (res.SuccessResponse == null)
+                return BadRequest(res.ErrorResponse);
 
-            return Ok(res);
+            return Ok(res.SuccessResponse);
         }
     }
 }

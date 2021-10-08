@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Trading.DTO.Response.Fiat
 {
-    public class FiatResponseExchangeDTO
+    public class FiatResponseDTO
     {
         [JsonProperty("result")]
         public string Result { get; set; }
@@ -31,6 +31,9 @@ namespace Trading.DTO.Response.Fiat
 
         [JsonProperty("base_code")]
         public string BaseCode { get; set; }
+
+        [JsonProperty("conversion_rates")]
+        public Dictionary<string, double> ConversionRates { get; set; }
 
         [JsonProperty("target_code")]
         public string TargetCode { get; set; }
