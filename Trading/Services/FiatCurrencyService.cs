@@ -19,29 +19,33 @@ namespace Trading.Services
             _httpClient = clientFactory.CreateClient();
         }
 
-        public async Task<FiatResponseExchangeDTO> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
+        public async Task<CoupledResponseDTO> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
         {
             string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/pair/{baseCurrencyCode}/{subCurrencyCode}/{amount}";
 
             using(HttpResponseMessage response = await _httpClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadAsAsync<FiatResponseExchangeDTO>();
+                    return new CoupledResponseDTO() { SuccessResponse = await response.Content.ReadAsAsync<FiatResponseDTO>(), ErrorResponse = null };
                 else
-                    throw new NotImplementedException();
+                    return new CoupledResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<FiatResponseErrorDto>() };
             }
         }
 
-        public async Task<FiatResponseRateDTO> Rates(string baseCurrencyCode)
+        public async Task<CoupledResponseDTO> Rates(string baseCurrencyCode)
         {
             string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/latest/{baseCurrencyCode}";
 
             using (HttpResponseMessage response = await _httpClient.GetAsync(url)) 
             {
                 if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadAsAsync<FiatResponseRateDTO>();
+                {
+                    var res = await response.Content.ReadAsAsync<FiatResponseDTO>();
+                    res.ConversionRates.Remove(baseCurrencyCode);
+                    return new CoupledResponseDTO() { SuccessResponse = res, ErrorResponse = null };
+                }
                 else
-                    throw new NotImplementedException();
+                    return new CoupledResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<FiatResponseErrorDto>() };
             }
         }
     }
