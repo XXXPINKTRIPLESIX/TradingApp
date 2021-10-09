@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Trading.Data.Models;
 using Trading.Data.Repository;
 using Trading.DTO.Request;
+using Trading.Interfaces.Database;
 
 namespace Trading.Controllers
 {
@@ -23,10 +24,10 @@ namespace Trading.Controllers
         private readonly UserRepository _userRepository;
         private readonly IConfiguration _configuration;
 
-        public AuthController(ILogger<AuthController> logger, UserRepository userRepository, IConfiguration configuration)
+        public AuthController(ILogger<AuthController> logger, IRepository<User, int> userRepository, IConfiguration configuration)
         {
             _logger = logger;
-            _userRepository = userRepository;
+            _userRepository = userRepository as UserRepository;
             _configuration = configuration;
         }
 
