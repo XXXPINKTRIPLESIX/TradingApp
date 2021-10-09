@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace Trading.DTO.Request
 {
-    public class AuthRequest
+    public class AuthRequestDTO
     {
+        public string Login { get; set; }
+        public string Password { get; set; }
     }
 }

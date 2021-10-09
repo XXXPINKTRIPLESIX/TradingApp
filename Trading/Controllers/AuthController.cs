@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Trading.Data.Models;
 using Trading.Data.Repository;
+using Trading.DTO.Request;
 
 namespace Trading.Controllers
 {
@@ -30,9 +31,9 @@ namespace Trading.Controllers
         }
 
         [HttpPost("/token")]
-        public async Task<IActionResult> Token(string username, string password)
+        public async Task<IActionResult> Token([FromBody]AuthRequestDTO authRequest)
         {
-            var identity = await GetIdentity(username, password);
+            var identity = await GetIdentity(authRequest.Login, authRequest.Password);
 
             if (identity == null)
                 return BadRequest(new { errorText = "Invalid username or password." });
