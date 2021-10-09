@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -49,7 +50,7 @@ namespace Trading
 
             //Services
             services.AddTransient<ICurrencyService, FiatCurrencyService>();
-           // services.AddTransient<ICurrencyService<CryproRateDTO>, CryptoCurrencyService>();
+            services.AddTransient<ICryptoCurrencyService, CryptoCurrencyService>();
 
             services.AddHttpClient();
 
@@ -72,10 +73,7 @@ namespace Trading
                     };
                 });
 
-            services.AddControllers().ConfigureApiBehaviorOptions(options => 
-            {
-                options.SuppressInferBindingSourcesForParameters = true;
-            });
+            services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining(typeof(Info)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

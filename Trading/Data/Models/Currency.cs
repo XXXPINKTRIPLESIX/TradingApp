@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Trading.Data.Models
 {
-    public class Currency{
-       [Key]
-       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public class Currency
+    {
         public int Id { get; set; }
         public string CurrencyCode { get; set; }
         public CurrencyType Type { get; set; }

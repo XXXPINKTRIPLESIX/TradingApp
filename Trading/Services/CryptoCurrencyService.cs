@@ -17,7 +17,7 @@ namespace Trading.Services
         public CryptoCurrencyService(IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
             _configuration = configuration;
-            _httpClient = httpClientFactory.CreateClient("");
+            _httpClient = httpClientFactory.CreateClient();
         }
 
         public async Task<List<CryptoResponseExchangeDTO>> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount)
