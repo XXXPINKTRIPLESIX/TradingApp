@@ -21,5 +21,10 @@ namespace Trading.Data.Repository
         {
             return await _databaseContext.Users.ToListAsync();
         }
+
+        public async Task<User> GetByLoginAndPasswordAsync(string login, string password) 
+        {
+            return await _databaseContext.Users.FirstOrDefaultAsync(u => u.Login == login && u.Password == password);
+        }
     }
 }

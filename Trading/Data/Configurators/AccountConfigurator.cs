@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Trading.Data.Models;
 
-namespace Trading.Data.Configurations
+namespace Trading.Data.Configurators
 {
     public class AccountConfigurator : IEntityTypeConfiguration<Account>
     {

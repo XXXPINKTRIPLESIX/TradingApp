@@ -26,14 +26,14 @@ namespace Trading.Data
 
             base.OnModelCreating(builder);
 
-            builder.Entity<User>().HasData(new User(1, "111", "111", "111@gmail.com", null
+            builder.Entity<User>().HasData(new User(1, "111", "111", "111@gmail.com", "admin", null
                /* new PersonalData("name111", "lastname111", "surname111", "+380", "Desc111")*/, null));
             //builder.Entity<User>().HasData(new User {Id = 1, Login = "111", Password = "111", Email = "111@gmail.com", Balances = null, PersonalData = null });
-            builder.Entity<User>().HasData(new User(2, "222", "222", "222@gmail.com", null, null));
-            builder.Entity<User>().HasData(new User(3, "333", "333", "333@gmail.com", null, null));
-            builder.Entity<User>().HasData(new User(4, "444", "444", "444@gmail.com", null, null));
-            builder.Entity<User>().HasData(new User(5, "555", "555", "555@gmail.com", null, null));
-            builder.Entity<User>().HasData(new User(6, "666", "666", "666@gmail.com", null, null));
+            builder.Entity<User>().HasData(new User(2, "222", "222", "222@gmail.com", "user", null, null));
+            builder.Entity<User>().HasData(new User(3, "333", "333", "333@gmail.com", "user", null, null));
+            builder.Entity<User>().HasData(new User(4, "444", "444", "444@gmail.com", "user", null, null));
+            builder.Entity<User>().HasData(new User(5, "555", "555", "555@gmail.com", "user", null, null));
+            builder.Entity<User>().HasData(new User(6, "666", "666", "666@gmail.com", "user", null, null));
 
             builder.Entity<Currency>().HasData(new Currency(1, "USD", CurrencyType.Fiat));
             builder.Entity<Currency>().HasData(new Currency(2, "EUR", CurrencyType.Fiat));

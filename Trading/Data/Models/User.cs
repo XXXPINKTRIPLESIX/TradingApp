@@ -13,15 +13,17 @@ namespace Trading.Data.Models
         public string Login { get; set; }
         public string Password { get; set; }
         public string  Email { get; set; }
+        public string Role { get; set; }
         public PersonalData PersonalData { get; set; } = null;
         public List<Account> MoneyAccounts { get; set; }
 
-        public User(int id, string login, string password, string email, PersonalData personalData, List<Account> moneyAccounts)
+        public User(int id, string login, string password, string email, string role, PersonalData personalData, List<Account> moneyAccounts)
         {
             Id = id;
             Login = login;
             Password = password;
             Email = email;
+            Role = role;
             MoneyAccounts = moneyAccounts;
             PersonalData = personalData;
         }
