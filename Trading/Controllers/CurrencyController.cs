@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Trading.Data.Models;
 using Trading.DTO.Request;
-using Trading.Interfaces.Database;
-using Trading.Interfaces.Services;
+using Trading.Interfaces;
+using Trading.Services;
 
 namespace Trading.Controllers
 {
@@ -17,13 +17,13 @@ namespace Trading.Controllers
     public class CurrencyController : ControllerBase
     {
         private readonly ILogger<CurrencyController> _logger;
-        private readonly ICurrencyService _currencyService;
+        private readonly FiatCurrencyService _currencyService;
         private readonly IRepository<Currency, int> _currencyRepository;
 
-        public CurrencyController(ILogger<CurrencyController> logger, ICurrencyService currencyService, IRepository<Currency, int> currencyRepository)
+        public CurrencyController(ILogger<CurrencyController> logger, IService currencyService, IRepository<Currency, int> currencyRepository)
         {
             _logger = logger;
-            _currencyService = currencyService;
+            _currencyService = currencyService as FiatCurrencyService;
             _currencyRepository = currencyRepository;
         }
 
@@ -98,7 +98,7 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _currencyService.Exchange(exchangeDTO.BaseCurrency, exchangeDTO.TargetCurrency, exchangeDTO.Amount);
+            var res = await _currencyService.ExchangeAsync(exchangeDTO.BaseCurrency, exchangeDTO.TargetCurrency, exchangeDTO.Amount);
 
             if (res.SuccessResponse == null)
                 return BadRequest(res.ErrorResponse); 
@@ -113,7 +113,7 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _currencyService.Rates(baseCurrency);
+            var res = await _currencyService.RatesAsync(baseCurrency);
 
             if (res.SuccessResponse == null)
                 return BadRequest(res.ErrorResponse);

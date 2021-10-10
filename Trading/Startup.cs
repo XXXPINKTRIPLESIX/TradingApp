@@ -1,8 +1,7 @@
 using Trading.Data;
 using Trading.Data.Models;
 using Trading.Data.Repository;
-using Trading.Interfaces.Database;
-using Trading.Interfaces.Services;
+using Trading.Interfaces;
 using Trading.Services;
 using System;
 using System.Collections.Generic;
@@ -49,8 +48,9 @@ namespace Trading
             services.AddTransient<IRepository<Account, int>, AccountRepository>();
 
             //Services
-            services.AddTransient<ICurrencyService, FiatCurrencyService>();
-            services.AddTransient<ICryptoCurrencyService, CryptoCurrencyService>();
+            services.AddTransient<IService, FiatCurrencyService>();
+            services.AddTransient<IService, CryptoCurrencyService>();
+            services.AddTransient<IService, AuthService>();
 
             services.AddHttpClient();
 

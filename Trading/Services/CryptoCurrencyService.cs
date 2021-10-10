@@ -5,11 +5,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Trading.DTO.Response.Crypro;
-using Trading.Interfaces.Services;
+using Trading.Interfaces;
 
 namespace Trading.Services
 {
-    public class CryptoCurrencyService : ICryptoCurrencyService
+    public class CryptoCurrencyService : IService
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;

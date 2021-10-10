@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Trading.Interfaces.Database;
+using Trading.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Trading.Data.Repository.Base

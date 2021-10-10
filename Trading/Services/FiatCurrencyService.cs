@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Trading.Interfaces.Services;
+using Trading.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Trading.DTO.Response.Fiat;
 
 namespace Trading.Services
 {
-    public class FiatCurrencyService : ICurrencyService
+    public class FiatCurrencyService : IService
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
@@ -19,7 +19,7 @@ namespace Trading.Services
             _httpClient = clientFactory.CreateClient();
         }
 
-        public async Task<CoupledResponseDTO> Exchange(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
+        public async Task<CoupledResponseDTO> ExchangeAsync(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
         {
             string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/pair/{baseCurrencyCode}/{subCurrencyCode}/{amount}";
 
@@ -32,7 +32,7 @@ namespace Trading.Services
             }
         }
 
-        public async Task<CoupledResponseDTO> Rates(string baseCurrencyCode)
+        public async Task<CoupledResponseDTO> RatesAsync(string baseCurrencyCode)
         {
             string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/latest/{baseCurrencyCode}";
 

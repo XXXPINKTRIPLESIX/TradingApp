@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Trading.Data.Models
+namespace Trading.Interfaces
 {
-    public enum Roles
+    public interface IService
     {
-        User = 1,
-        Admin = 2
     }
 }
