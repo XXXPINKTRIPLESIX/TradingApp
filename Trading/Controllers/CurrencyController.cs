@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using MediatR;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trading.Commands.CurrencyCommands;
 using Trading.Data.Models;
 using Trading.DTO.Request;
-using Trading.Interfaces;
-using Trading.Services;
+using Trading.Queries.CurrencyQueries;
 
 namespace Trading.Controllers
 {
@@ -17,25 +18,22 @@ namespace Trading.Controllers
     public class CurrencyController : ControllerBase
     {
         private readonly ILogger<CurrencyController> _logger;
-        private readonly FiatCurrencyService _currencyService;
-        private readonly IRepository<Currency, int> _currencyRepository;
+        private readonly IMediator _mediator;
 
-        public CurrencyController(ILogger<CurrencyController> logger, IService currencyService, IRepository<Currency, int> currencyRepository)
+        public CurrencyController(ILogger<CurrencyController> logger, IMediator mediator)
         {
             _logger = logger;
-            _currencyService = currencyService as FiatCurrencyService;
-            _currencyRepository = currencyRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var currencies = await _currencyRepository.GetAsync();
+            var res = await _mediator.Send(new GetCurrenciesQuery());
 
-            if (currencies == null)
+            if (res == null)
                 return NotFound();
-
-            return Ok(currencies);
+            return Ok(res);
         }
 
         [HttpGet("{id}")]
@@ -44,11 +42,10 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _currencyRepository.GetAsync(id);
+            var res = await _mediator.Send(new GetCurrencyQuery(id));
 
             if (res == null)
                 return NotFound();
-
             return Ok(res);
         }
 
@@ -58,11 +55,10 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _currencyRepository.DeleteAsync(id);
+            var res = await _mediator.Send(new DeleteCurrencyCommand(id));
 
-            if (res == null)
+            if (!res)
                 return NotFound();
-
             return Ok(res);
         }
 
@@ -72,7 +68,7 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            await _currencyRepository.AddAsync(currency);
+            await _mediator.Send(new CreateCurrencyCommand(currency));
 
             return NoContent();
         }
@@ -83,11 +79,10 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _currencyRepository.UpdateAsync(currency);
+            var res = await _mediator.Send(new UpdateCurrencyCommand(currency));
 
-            if (res == null)
+            if (!res)
                 return NotFound();
-
             return Ok(res);
         }
 
@@ -98,11 +93,10 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _currencyService.ExchangeAsync(exchangeDTO.BaseCurrency, exchangeDTO.TargetCurrency, exchangeDTO.Amount);
+            var res = await _mediator.Send(new ExchangeCurrencyCommand(exchangeDTO));
 
             if (res.SuccessResponse == null)
-                return BadRequest(res.ErrorResponse); 
-                                                           
+                return BadRequest(res.ErrorResponse);                    
             return Ok(res.SuccessResponse);                
         }
 
@@ -113,11 +107,10 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _currencyService.RatesAsync(baseCurrency);
+            var res = await _mediator.Send(new RateCurrencyCommand(baseCurrency));
 
             if (res.SuccessResponse == null)
                 return BadRequest(res.ErrorResponse);
-
             return Ok(res.SuccessResponse);
         }
     }

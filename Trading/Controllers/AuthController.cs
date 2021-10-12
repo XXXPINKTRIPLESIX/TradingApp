@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Trading.Data.Models;
-using Trading.Data.Repository;
 using Trading.DTO.Request;
 using Trading.Interfaces;
 using Trading.Services;
@@ -19,13 +19,13 @@ namespace Trading.Controllers
     {
         private readonly ILogger<AuthController> _logger;
         private readonly AuthService _authService;
-        private readonly UserRepository _userRepository;
+        private readonly IMediator _mediator;
 
-        public AuthController(ILogger<AuthController> logger, IRepository<User, int> userRepository, IService authService)
+        public AuthController(ILogger<AuthController> logger, IMediator mediator, IService authService)
         {
             _logger = logger;
             _authService = authService as AuthService;
-            _userRepository = userRepository as UserRepository;
+            _mediator = mediator;
         }
 
         [HttpPost("/token")]

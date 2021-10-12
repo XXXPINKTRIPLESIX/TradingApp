@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trading.Commands.UserCommands;
 using Trading.Data.Models;
 using Trading.Interfaces;
+using Trading.Queries.UserQueries;
 
 namespace Trading.Controllers
 {
@@ -14,18 +17,18 @@ namespace Trading.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IRepository<User, int> _userRepository;
+        private readonly IMediator _mediator;
         
-        public UserController(ILogger<UserController> logger, IRepository<User, int> userRepository)
+        public UserController(ILogger<UserController> logger, IMediator mediator)
         {
             _logger = logger;
-            _userRepository = userRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get() 
         {
-            var res = await _userRepository.GetAsync();
+            var res = await _mediator.Send(new GetUsersQuery());
 
             if (res == null)
                 return NotFound();
@@ -38,7 +41,7 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _userRepository.GetAsync(id);
+            var res = await _mediator.Send(new GetUserQuery(id));
 
             if (res == null)
                 return NotFound();
@@ -51,9 +54,9 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _userRepository.DeleteAsync(id);
+            var res = await _mediator.Send(new DeleteUserCommand(id));
 
-            if (res == null)
+            if (!res)
                 return NotFound();
             return Ok(res);
         }
@@ -64,7 +67,7 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            await _userRepository.AddAsync(user);
+            await _mediator.Send(new CreateUserCommand(user));
 
             return NoContent();
         }
@@ -75,9 +78,9 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await _userRepository.UpdateAsync(user);
+            var res = await _mediator.Send(new UpdateUserCommand(user));
 
-            if (res == null)
+            if (!res)
                 return NotFound();
             return Ok(res);
         }

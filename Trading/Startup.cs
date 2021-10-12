@@ -1,6 +1,5 @@
 using Trading.Data;
 using Trading.Data.Models;
-using Trading.Data.Repository;
 using Trading.Interfaces;
 using Trading.Services;
 using System;
@@ -40,12 +39,6 @@ namespace Trading
             services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlServer(
                 Configuration.GetConnectionString("ConnectionString")));
-
-            //Repositories
-            services.AddTransient<IRepository<Account, int>, AccountRepository>();
-            services.AddTransient<IRepository<User, int>, UserRepository>();
-            services.AddTransient<IRepository<Currency, int>, CurrencyRepository>();
-            services.AddTransient<IRepository<Account, int>, AccountRepository>();
 
             //Services
             services.AddTransient<IService, FiatCurrencyService>();

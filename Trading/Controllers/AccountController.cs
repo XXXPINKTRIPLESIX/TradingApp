@@ -1,31 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trading.Commands.AccountCommands;
 using Trading.Data.Models;
-using Trading.Interfaces;
+using Trading.Queries.AccountQueries;
 
 namespace Trading.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MoneyAccountController : ControllerBase  
+    public class AccountController : ControllerBase  
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IRepository<Account, int> _accountRepository;
+        private readonly IMediator _mediator;
 
-        public MoneyAccountController(ILogger<UserController> logger, IRepository<Account, int> accountRepository)
+        public AccountController(ILogger<UserController> logger, IMediator mediator)
         {
             _logger = logger;
-            _accountRepository = accountRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get() 
         {
-            var res = await _accountRepository.GetAsync();
+            var res = await _mediator.Send(new GetAccountsQuery());
 
             if (res == null)
                 return NotFound();
@@ -38,7 +40,7 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var res = await _accountRepository.GetAsync(id);
+            var res = await _mediator.Send(new GetAccountQuery(id));
 
             if (res == null)
                 return NotFound();
@@ -51,7 +53,7 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            await _accountRepository.AddAsync(account);
+            await _mediator.Send(new CreateAccountCommand(account));
 
             return NoContent();
         }
@@ -62,9 +64,9 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var res = await _accountRepository.UpdateAsync(account);
+            var res = await _mediator.Send(new UpdateAccountCommand(account));
 
-            if (res == null)
+            if (!res)
                 return NotFound();
             return Ok(res);
         }
@@ -75,9 +77,9 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var res = await _accountRepository.DeleteAsync(id);
+            var res = await _mediator.Send(new DeleteAccountCommand(id));
 
-            if (res == null)
+            if (!res)
                 return NotFound();
             return Ok(res);
         }

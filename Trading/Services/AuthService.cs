@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Trading.Data;
 using Trading.Data.Models;
-using Trading.Data.Repository;
 using Trading.DTO.Request;
 using Trading.Interfaces;
 
@@ -16,12 +17,12 @@ namespace Trading.Services
 {
     public class AuthService : IService
     {
-        private readonly UserRepository _userRepository;
+        private readonly DatabaseContext _databaseContext;
         private readonly IConfiguration _configuration;
 
-        public AuthService(IRepository<User, int> userRepository, IConfiguration configuration)
+        public AuthService(DatabaseContext databaseContext, IConfiguration configuration)
         {
-            _userRepository = userRepository as UserRepository;
+            _databaseContext = databaseContext;
             _configuration = configuration;
         }
 
@@ -51,7 +52,7 @@ namespace Trading.Services
 
         private async Task<ClaimsIdentity> GetIdentityAsync(string login, string password)
         {
-            var user = await _userRepository.GetByLoginAndPasswordAsync(login, password);
+            var user = await _databaseContext.Users.FirstOrDefaultAsync(u => u.Login == login && u.Password == password); 
 
             if (user != null)
             {

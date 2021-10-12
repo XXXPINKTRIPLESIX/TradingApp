@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Trading.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Trading.DTO.Response.Fiat;
+using Trading.DTO.Request;
+using System.Text;
 
 namespace Trading.Services
 {
@@ -19,11 +21,16 @@ namespace Trading.Services
             _httpClient = clientFactory.CreateClient();
         }
 
-        public async Task<CoupledResponseDTO> ExchangeAsync(string baseCurrencyCode, string subCurrencyCode, double amount = 1)
+        public async Task<CoupledResponseDTO> ExchangeAsync(FiatRequestExchangeDTO requestDTO)
         {
-            string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/pair/{baseCurrencyCode}/{subCurrencyCode}/{amount}";
+            StringBuilder urlBuilder = new StringBuilder(_configuration["FiatApi:BaseUrl"]);
+            urlBuilder.Append(_configuration["FiatApi:Key"]);
+            urlBuilder.Append("/pair/");
+            urlBuilder.Append(requestDTO.BaseCurrency + "/");
+            urlBuilder.Append(requestDTO.TargetCurrency + "/");
+            urlBuilder.Append(requestDTO.Amount);
 
-            using(HttpResponseMessage response = await _httpClient.GetAsync(url))
+            using(HttpResponseMessage response = await _httpClient.GetAsync(urlBuilder.ToString()))
             {
                 if (response.IsSuccessStatusCode)
                     return new CoupledResponseDTO() { SuccessResponse = await response.Content.ReadAsAsync<FiatResponseDTO>(), ErrorResponse = null };
@@ -34,9 +41,12 @@ namespace Trading.Services
 
         public async Task<CoupledResponseDTO> RatesAsync(string baseCurrencyCode)
         {
-            string url = $"{_configuration["FiatApi:BaseUrl"]}{_configuration["FiatApi:Key"]}/latest/{baseCurrencyCode}";
+            StringBuilder urlBuilder = new StringBuilder(_configuration["FiatApi:BaseUrl"]);
+            urlBuilder.Append(_configuration["FiatApi:Key"] + "/");
+            urlBuilder.Append("latest/");
+            urlBuilder.Append(baseCurrencyCode);
 
-            using (HttpResponseMessage response = await _httpClient.GetAsync(url)) 
+            using (HttpResponseMessage response = await _httpClient.GetAsync(urlBuilder.ToString())) 
             {
                 if (response.IsSuccessStatusCode)
                 {
