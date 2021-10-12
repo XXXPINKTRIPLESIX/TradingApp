@@ -11,6 +11,7 @@ namespace Trading.Data.Models
     {
         public int Id { get; set; }
         public int CurrencyId { get; set; }
+        public int StudentId { get; set; }
         public Currency Currency { get; set; }
         public double Amount { get; set; }
 

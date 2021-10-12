@@ -14,12 +14,12 @@ namespace Trading.Data.Repository
 
         public async override Task<Account> GetAsync(int id)
         {
-            return await _databaseContext.Balances.FirstOrDefaultAsync(c => c.Id == id);
+            return await _databaseContext.Accounts.FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async override Task<List<Account>> GetAsync()
         {
-            return await _databaseContext.Balances.ToListAsync();
+            return await _databaseContext.Accounts.ToListAsync();
         }
     }
 }

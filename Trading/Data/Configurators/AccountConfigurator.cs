@@ -12,11 +12,11 @@ namespace Trading.Data.Configurators
     {
         public void Configure(EntityTypeBuilder<Account> builder)
         {
-            builder.ToTable("Account");
+            builder.ToTable("Accounts");
 
             builder.HasKey(p => p.Id);
             builder.Property(p => p.CurrencyId).HasColumnName("currency_id").IsRequired();
-            builder.Property(p => p.Amount).HasColumnName("amount").HasColumnType("decimal");
+            builder.Property(p => p.Amount).HasColumnName("amount").HasColumnType("decimal").HasDefaultValue(0);
         }
     }
 }

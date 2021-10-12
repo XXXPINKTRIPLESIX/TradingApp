@@ -19,13 +19,13 @@ namespace Trading.Data.Configurators
             builder.Property(p => p.Login).HasColumnName("login").IsRequired();
             builder.Property(p => p.Password).HasColumnName("password").IsRequired();
             builder.Property(p => p.Email).HasColumnName("email").IsRequired();
-            builder.OwnsOne(p => p.PersonalData, parameter => 
+            builder.OwnsOne(p => p.PersonalData, parameter =>
             {
-                parameter.Property(p => p.Name).HasColumnName("user_name").IsRequired();
-                parameter.Property(p => p.LastName).HasColumnName("user_last_name").IsRequired();
-                parameter.Property(p => p.Surname).HasColumnName("user_surname").IsRequired();
-                parameter.Property(p => p.PhoneNumber).HasColumnName("user_phone_number").IsRequired();
-                parameter.Property(p => p.Description).HasColumnName("user_description").IsRequired();
+                parameter.Property(p => p.Name).HasColumnName("user_name");
+                parameter.Property(p => p.LastName).HasColumnName("user_last_name");
+                parameter.Property(p => p.Surname).HasColumnName("user_surname");
+                parameter.Property(p => p.PhoneNumber).HasColumnName("user_phone_number");
+                parameter.Property(p => p.Description).HasColumnName("user_description");
             });
         }
     }
