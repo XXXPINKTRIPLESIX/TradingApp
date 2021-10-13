@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Trading.Middlewares;
 
 namespace Trading
 {
@@ -77,6 +78,8 @@ namespace Trading
             {
                 app.UseDeveloperExceptionPage();
             }
+            //Custom Exception Handler
+            app.UseExceptionHandlerMiddleware();
 
             app.UseHttpsRedirection();
 
