@@ -7,7 +7,7 @@ using Trading.Data.Models;
 
 namespace Trading.Commands.UserCommands
 {
-    public class DeleteUserCommand : IRequest<bool>
+    public class DeleteUserCommand : IRequest<User>
     {
         public int Id { get; }
 

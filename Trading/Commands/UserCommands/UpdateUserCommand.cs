@@ -7,9 +7,10 @@ using Trading.Data.Models;
 
 namespace Trading.Commands.UserCommands
 {
-    public class UpdateUserCommand : IRequest<bool>
+    public class UpdateUserCommand : IRequest<User>
     {
         public User User { get; }
+
         public UpdateUserCommand(User user)
         {
             User = user;

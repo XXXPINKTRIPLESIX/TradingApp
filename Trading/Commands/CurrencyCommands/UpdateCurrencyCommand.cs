@@ -7,7 +7,7 @@ using Trading.Data.Models;
 
 namespace Trading.Commands.CurrencyCommands
 {
-    public class UpdateCurrencyCommand : IRequest<bool>
+    public class UpdateCurrencyCommand : IRequest<Currency>
     {
         public Currency Currency { get; }
 

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Trading.Commands.CurrencyCommands;
 using Trading.Data;
+using Trading.Data.Models;
 using Trading.DTO.Response.Fiat;
 using Trading.Interfaces;
 using Trading.Services;
@@ -15,8 +16,8 @@ namespace Trading.Commands.Handlers
 {
     public class CurrencyCommandHandler :
         IRequestHandler<CreateCurrencyCommand, bool>,
-        IRequestHandler<UpdateCurrencyCommand, bool>,
-        IRequestHandler<DeleteCurrencyCommand, bool>,
+        IRequestHandler<UpdateCurrencyCommand, Currency>,
+        IRequestHandler<DeleteCurrencyCommand, Currency>,
         IRequestHandler<ExchangeCurrencyCommand, CoupledResponseDTO>,
         IRequestHandler<RateCurrencyCommand, CoupledResponseDTO>
     {
@@ -37,30 +38,30 @@ namespace Trading.Commands.Handlers
             return true;
         }
 
-        public async Task<bool> Handle(UpdateCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<Currency> Handle(UpdateCurrencyCommand request, CancellationToken cancellationToken)
         {
-            var currency = await _context.Currencies.FirstOrDefaultAsync(c => c.Id == request.Currency.Id, cancellationToken);
+            var currency = await _context.Currencies.FindAsync(request.Currency.Id, cancellationToken);
 
             if (currency == null)
-                return false;
+                return null;
 
             _context.Currencies.Update(request.Currency);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return true;
+            return await _context.Currencies.FindAsync(currency.Id, cancellationToken);
         }
 
-        public async Task<bool> Handle(DeleteCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<Currency> Handle(DeleteCurrencyCommand request, CancellationToken cancellationToken)
         {
-            var currency = await _context.Currencies.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+            var currency = await _context.Currencies.FindAsync(request.Id, cancellationToken);
 
             if (currency == null)
-                return false;
+                return null;
 
             _context.Currencies.Remove(currency);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return true;
+            return currency;
         }
 
         public async Task<CoupledResponseDTO> Handle(ExchangeCurrencyCommand request, CancellationToken cancellationToken)

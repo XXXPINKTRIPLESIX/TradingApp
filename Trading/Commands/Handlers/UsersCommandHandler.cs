@@ -13,8 +13,8 @@ namespace Trading.Commands.Handlers
 {
     public class UsersCommandHandler :
         IRequestHandler<CreateUserCommand, bool>,
-        IRequestHandler<UpdateUserCommand, bool>,
-        IRequestHandler<DeleteUserCommand, bool>
+        IRequestHandler<UpdateUserCommand, User>,
+        IRequestHandler<DeleteUserCommand, User>
     {
         private readonly DatabaseContext _context;
 
@@ -31,30 +31,30 @@ namespace Trading.Commands.Handlers
             return true;
         }
 
-        public async Task<bool> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<User> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.User.Id, cancellationToken);
+            var user = await _context.Users.FindAsync(request.User.Id, cancellationToken);
 
             if (user == null)
-                return false;
+                return null;
 
             _context.Users.Update(request.User);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return true;
+            return await _context.Users.FindAsync(request.User.Id, cancellationToken);
         }
 
-        public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<User> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
+            var user = await _context.Users.FindAsync(request.Id, cancellationToken);
 
             if (user == null)
-                return false;
+                return null;
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return true;
+            return user;
         }
     }
 }

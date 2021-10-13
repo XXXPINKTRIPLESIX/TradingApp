@@ -66,7 +66,7 @@ namespace Trading.Controllers
 
             var res = await _mediator.Send(new UpdateAccountCommand(account));
 
-            if (!res)
+            if (res == null)
                 return NotFound();
             return Ok(res);
         }
@@ -79,7 +79,7 @@ namespace Trading.Controllers
 
             var res = await _mediator.Send(new DeleteAccountCommand(id));
 
-            if (!res)
+            if (res == null)
                 return NotFound();
             return Ok(res);
         }

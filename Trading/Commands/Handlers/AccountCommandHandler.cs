@@ -7,13 +7,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Trading.Commands.AccountCommands;
 using Trading.Data;
+using Trading.Data.Models;
 
 namespace Trading.Commands.Handlers
 {
     public class AccountCommandHandler :
         IRequestHandler<CreateAccountCommand, bool>,
-        IRequestHandler<UpdateAccountCommand, bool>,
-        IRequestHandler<DeleteAccountCommand, bool>
+        IRequestHandler<UpdateAccountCommand, Account>,
+        IRequestHandler<DeleteAccountCommand, Account>
     {
         private readonly DatabaseContext _context;
 
@@ -30,30 +31,30 @@ namespace Trading.Commands.Handlers
             return true;
         }
 
-        public async Task<bool> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
+        public async Task<Account> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.Account.Id, cancellationToken);
+            var account = await _context.Accounts.FindAsync(request.Account.Id, cancellationToken);
 
             if (account == null)
-                return false;
+                return null;
 
             _context.Accounts.Update(request.Account);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return true;
+            return await _context.Accounts.FindAsync(account.Id, cancellationToken);
         }
 
-        public async Task<bool> Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
+        public async Task<Account> Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
+            var account = await _context.Accounts.FindAsync(request.Id, cancellationToken);
 
             if (account == null)
-                return false;
+                return null;
 
             _context.Accounts.Remove(account);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return true;
+            return account;
         }
     }
 }

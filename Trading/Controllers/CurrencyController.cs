@@ -57,7 +57,7 @@ namespace Trading.Controllers
 
             var res = await _mediator.Send(new DeleteCurrencyCommand(id));
 
-            if (!res)
+            if (res == null)
                 return NotFound();
             return Ok(res);
         }
@@ -81,7 +81,7 @@ namespace Trading.Controllers
 
             var res = await _mediator.Send(new UpdateCurrencyCommand(currency));
 
-            if (!res)
+            if (res == null)
                 return NotFound();
             return Ok(res);
         }

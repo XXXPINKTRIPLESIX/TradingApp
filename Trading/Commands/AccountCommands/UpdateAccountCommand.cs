@@ -7,7 +7,7 @@ using Trading.Data.Models;
 
 namespace Trading.Commands.AccountCommands
 {
-    public class UpdateAccountCommand : IRequest<bool>
+    public class UpdateAccountCommand : IRequest<Account>
     {
         public Account Account { get; }
         public UpdateAccountCommand(Account account)
