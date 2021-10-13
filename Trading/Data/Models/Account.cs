@@ -11,16 +11,14 @@ namespace Trading.Data.Models
     {
         public int Id { get; set; }
         public int CurrencyId { get; set; }
-        public int StudentId { get; set; }
+        public int UserId { get; set; }
         public Currency Currency { get; set; }
         public double Amount { get; set; }
 
-        public Account(int  id, int currencyId, Currency currency, double amount)
+        public Account(int  id, int currencyId)
         {
             Id = id;
             CurrencyId = currencyId;
-            Currency = currency;
-            Amount = amount;
         }
 
         private Account() { }

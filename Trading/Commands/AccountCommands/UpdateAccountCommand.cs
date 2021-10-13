@@ -9,10 +9,19 @@ namespace Trading.Commands.AccountCommands
 {
     public class UpdateAccountCommand : IRequest<Account>
     {
-        public Account Account { get; }
-        public UpdateAccountCommand(Account account)
+        public int Id { get; }
+        public int CurrencyId { get; }
+        public int UserId { get; set; }
+        public Currency Currency { get; }
+        public double Amount { get; }
+
+        public UpdateAccountCommand(int id, int currencyId, int userId, Currency currency, double amount)
         {
-            Account = account;
+            Id = id;
+            CurrencyId = currencyId;
+            UserId = userId;
+            Currency = currency;
+            Amount = amount;
         }
     }
 }

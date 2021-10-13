@@ -49,7 +49,7 @@ namespace Trading
             services.AddHttpClient();
 
             //MediatR
-            services.AddMediatR(Assembly.GetExecutingAssembly(), typeof(Info).Assembly);
+            services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.GetExecutingAssembly());
 
             //JWT Auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -68,7 +68,7 @@ namespace Trading
                 });
 
             services.AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining(typeof(Info)));
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

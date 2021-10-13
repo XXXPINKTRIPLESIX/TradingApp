@@ -9,11 +9,13 @@ namespace Trading.Commands.AccountCommands
 {
     public class CreateAccountCommand : IRequest<bool>
     {
-        public Account Account { get; }
+        public int CurrencyId { get; }
+        public int UserId { get; }
 
-        public CreateAccountCommand(Account account)
+        public CreateAccountCommand(int currencyId, int userId)
         {
-            Account = account;
+            CurrencyId = currencyId;
+            UserId = userId;
         }
     }
 }

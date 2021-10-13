@@ -40,7 +40,7 @@ namespace Trading.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var res = await _mediator.Send(new GetAccountQuery(id));
+            var res = await _mediator.Send(new GetAccountQuery());
 
             if (res == null)
                 return NotFound();

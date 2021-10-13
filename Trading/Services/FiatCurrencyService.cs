@@ -30,6 +30,8 @@ namespace Trading.Services
             urlBuilder.Append(requestDTO.TargetCurrency + "/");
             urlBuilder.Append(requestDTO.Amount);
 
+
+
             using(HttpResponseMessage response = await _httpClient.GetAsync(urlBuilder.ToString()))
             {
                 if (response.IsSuccessStatusCode)

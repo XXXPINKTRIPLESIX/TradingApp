@@ -17,7 +17,7 @@ namespace Trading.Data.Configurators
             builder.HasKey(p => p.Id);
             builder.Property(p => p.CurrencyId).HasColumnName("currency_id").IsRequired();
             builder.Property(p => p.Amount).HasColumnName("amount").HasColumnType("decimal").HasDefaultValue(0);
-            builder.Property(p => p.StudentId).HasColumnName("student_id").IsRequired();
+            builder.Property(p => p.UserId).HasColumnName("student_id").IsRequired();
         }
     }
 }

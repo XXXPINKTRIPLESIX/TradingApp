@@ -11,6 +11,7 @@ namespace Trading.Data.Models
     {
         public int Id { get; set; }
         public string CurrencyCode { get; set; }
+        public List<Account> Accounts { get; set; }
         public CurrencyType Type { get; set; }
 
         public Currency(int id, string currencyCode, CurrencyType type)
