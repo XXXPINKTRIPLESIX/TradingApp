@@ -42,7 +42,9 @@ namespace Trading.Controllers
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest();
+            }
 
             var res = await _mediator.Send(new GetAccountQuery());
 
@@ -57,11 +59,6 @@ namespace Trading.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateAccountDTO accountDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             await _mediator.Send(new CreateAccountCommand(accountDTO.UserId, accountDTO.CurrencyId));
 
             return NoContent();
@@ -71,7 +68,9 @@ namespace Trading.Controllers
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest();
+            }
 
             var res = await _mediator.Send(new DeleteAccountCommand(id));
 

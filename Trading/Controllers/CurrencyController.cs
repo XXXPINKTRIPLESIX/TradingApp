@@ -43,7 +43,9 @@ namespace Trading.Controllers
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             var res = await _mediator.Send(new GetCurrencyQuery(id));
 
@@ -99,11 +101,6 @@ namespace Trading.Controllers
         [Route("Rate")]
         public async Task<IActionResult> CurrencyRate([FromQuery] string baseCurrency)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var res = await _mediator.Send(new RateCurrencyCommand(baseCurrency));
 
             if (res.SuccessResponse == null)

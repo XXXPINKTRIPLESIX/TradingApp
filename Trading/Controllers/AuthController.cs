@@ -31,13 +31,12 @@ namespace Trading.Controllers
         [HttpPost("/token")]
         public async Task<IActionResult> Token([FromBody]AuthDTO authDTO)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var response = await _authService.GetTokenAsync(authDTO.Login, authDTO.Password);
 
             if (response == null)
+            {
                 return BadRequest();
+            }
 
             return Ok(response);
         }
