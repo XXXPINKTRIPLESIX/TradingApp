@@ -13,7 +13,6 @@ namespace Trading.Commands.Handlers
 {
     public class AccountCommandHandler :
         IRequestHandler<CreateAccountCommand, bool>,
-        IRequestHandler<UpdateAccountCommand, Account>,
         IRequestHandler<DeleteAccountCommand, Account>
     {
         private readonly DatabaseContext _context;
@@ -25,32 +24,23 @@ namespace Trading.Commands.Handlers
 
         public async Task<bool> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
         {
-            await _context.Accounts.AddAsync(request.Account, cancellationToken);
+            Account account = new Account(request.UserId, request.CurrencyId);
+
+            await _context.Accounts.AddAsync(account, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             return true;
-        }
-
-        public async Task<Account> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
-        {
-            var account = await _context.Accounts.FindAsync(request.Account.Id, cancellationToken);
-
-            if (account == null)
-                return null;
-
-            _context.Accounts.Update(request.Account);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return await _context.Accounts.FindAsync(account.Id, cancellationToken);
         }
 
         public async Task<Account> Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
         {
             var account = await _context.Accounts.FindAsync(request.Id, cancellationToken);
 
-            if (account == null)
+            if (account == null) 
+            {
                 return null;
-
+            }
+                
             _context.Accounts.Remove(account);
             await _context.SaveChangesAsync(cancellationToken);
 

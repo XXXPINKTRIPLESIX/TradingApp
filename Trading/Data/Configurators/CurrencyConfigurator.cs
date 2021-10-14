@@ -15,6 +15,7 @@ namespace Trading.Data.Configurators
             builder.ToTable("Currencies");
 
             builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).HasColumnName("id").IsRequired().ValueGeneratedOnAdd();
             builder.Property(p => p.CurrencyCode).HasColumnName("currency_code").IsRequired();
             builder.Property(p => p.Type).HasColumnName("type").IsRequired();
         }

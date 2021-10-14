@@ -21,7 +21,7 @@ namespace Trading.Commands.Handlers
 
         public async Task<object> Handle(GetTokenCommand request, CancellationToken cancellationToken)
         {
-            return await _authService.GetTokenAsync(request.AuthDTO);
+            return await _authService.GetTokenAsync(request.Login, request.Password);
         }
     }
 }

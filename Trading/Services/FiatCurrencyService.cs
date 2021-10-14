@@ -21,43 +21,47 @@ namespace Trading.Services
             _httpClient = clientFactory.CreateClient();
         }
 
-        public async Task<CoupledResponseDTO> ExchangeAsync(FiatRequestExchangeDTO requestDTO)
+        public async Task<FiatApiResponseDTO> ExchangeAsync(string baseCurrency, string targetCurrency, double amount)
         {
             StringBuilder urlBuilder = new StringBuilder(_configuration["FiatApi:BaseUrl"]);
             urlBuilder.Append(_configuration["FiatApi:Key"]);
             urlBuilder.Append("/pair/");
-            urlBuilder.Append(requestDTO.BaseCurrency + "/");
-            urlBuilder.Append(requestDTO.TargetCurrency + "/");
-            urlBuilder.Append(requestDTO.Amount);
+            urlBuilder.Append(baseCurrency + "/");
+            urlBuilder.Append(targetCurrency + "/");
+            urlBuilder.Append(amount);
 
-
-
-            using(HttpResponseMessage response = await _httpClient.GetAsync(urlBuilder.ToString()))
+            using (HttpResponseMessage response = await _httpClient.GetAsync(urlBuilder.ToString()))
             {
                 if (response.IsSuccessStatusCode)
-                    return new CoupledResponseDTO() { SuccessResponse = await response.Content.ReadAsAsync<FiatResponseDTO>(), ErrorResponse = null };
+                {
+                    return new FiatApiResponseDTO() { SuccessResponse = await response.Content.ReadAsAsync<FiatResponseDTO>(), ErrorResponse = null };
+                }
                 else
-                    return new CoupledResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<FiatResponseErrorDto>() };
+                {
+                    return new FiatApiResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<FiatResponseErrorDto>() };
+                }
             }
         }
 
-        public async Task<CoupledResponseDTO> RatesAsync(string baseCurrencyCode)
+        public async Task<FiatApiResponseDTO> RatesAsync(string baseCurrencyCode)
         {
             StringBuilder urlBuilder = new StringBuilder(_configuration["FiatApi:BaseUrl"]);
             urlBuilder.Append(_configuration["FiatApi:Key"] + "/");
             urlBuilder.Append("latest/");
             urlBuilder.Append(baseCurrencyCode);
 
-            using (HttpResponseMessage response = await _httpClient.GetAsync(urlBuilder.ToString())) 
+            using (HttpResponseMessage response = await _httpClient.GetAsync(urlBuilder.ToString()))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     var res = await response.Content.ReadAsAsync<FiatResponseDTO>();
                     res.ConversionRates.Remove(baseCurrencyCode);
-                    return new CoupledResponseDTO() { SuccessResponse = res, ErrorResponse = null };
+                    return new FiatApiResponseDTO() { SuccessResponse = res, ErrorResponse = null };
                 }
                 else
-                    return new CoupledResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<FiatResponseErrorDto>() };
+                {
+                    return new FiatApiResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<FiatResponseErrorDto>() };
+                }
             }
         }
     }

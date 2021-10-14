@@ -16,10 +16,9 @@ namespace Trading.Commands.Handlers
 {
     public class CurrencyCommandHandler :
         IRequestHandler<CreateCurrencyCommand, bool>,
-        IRequestHandler<UpdateCurrencyCommand, Currency>,
         IRequestHandler<DeleteCurrencyCommand, Currency>,
-        IRequestHandler<ExchangeCurrencyCommand, CoupledResponseDTO>,
-        IRequestHandler<RateCurrencyCommand, CoupledResponseDTO>
+        IRequestHandler<ExchangeCurrencyCommand, FiatApiResponseDTO>,
+        IRequestHandler<RateCurrencyCommand, FiatApiResponseDTO>
     {
         private readonly DatabaseContext _context;
         private readonly FiatCurrencyService _currencyService;
@@ -32,23 +31,12 @@ namespace Trading.Commands.Handlers
 
         public async Task<bool> Handle(CreateCurrencyCommand request, CancellationToken cancellationToken)
         {
-            await _context.Currencies.AddAsync(request.Currency, cancellationToken);
+            Currency currency = new Currency(request.CurrencyCode, request.Type);
+
+            await _context.Currencies.AddAsync(currency, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             return true;
-        }
-
-        public async Task<Currency> Handle(UpdateCurrencyCommand request, CancellationToken cancellationToken)
-        {
-            var currency = await _context.Currencies.FindAsync(request.Currency.Id, cancellationToken);
-
-            if (currency == null)
-                return null;
-
-            _context.Currencies.Update(request.Currency);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return await _context.Currencies.FindAsync(currency.Id, cancellationToken);
         }
 
         public async Task<Currency> Handle(DeleteCurrencyCommand request, CancellationToken cancellationToken)
@@ -56,7 +44,9 @@ namespace Trading.Commands.Handlers
             var currency = await _context.Currencies.FindAsync(request.Id, cancellationToken);
 
             if (currency == null)
+            {
                 return null;
+            }
 
             _context.Currencies.Remove(currency);
             await _context.SaveChangesAsync(cancellationToken);
@@ -64,12 +54,12 @@ namespace Trading.Commands.Handlers
             return currency;
         }
 
-        public async Task<CoupledResponseDTO> Handle(ExchangeCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<FiatApiResponseDTO> Handle(ExchangeCurrencyCommand request, CancellationToken cancellationToken)
         {
-            return await _currencyService.ExchangeAsync(request.RequestDTO);
+            return await _currencyService.ExchangeAsync(request.BaseCurrency, request.TargetCurrency, request.Amount);
         }
 
-        public async Task<CoupledResponseDTO> Handle(RateCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<FiatApiResponseDTO> Handle(RateCurrencyCommand request, CancellationToken cancellationToken)
         {
             return await _currencyService.RatesAsync(request.BaseCurrency);
         }

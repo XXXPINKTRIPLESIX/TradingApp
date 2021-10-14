@@ -15,7 +15,7 @@ namespace Trading.Data.Configurators
             builder.ToTable("Users");
 
             builder.HasKey(p => p.Id);
-            builder.Property(p => p.Id).HasColumnName("id").IsRequired();
+            builder.Property(p => p.Id).HasColumnName("id").IsRequired().ValueGeneratedOnAdd();
             builder.Property(p => p.Login).HasColumnName("login").IsRequired();
             builder.Property(p => p.Password).HasColumnName("password").IsRequired();
             builder.Property(p => p.Email).HasColumnName("email").IsRequired();

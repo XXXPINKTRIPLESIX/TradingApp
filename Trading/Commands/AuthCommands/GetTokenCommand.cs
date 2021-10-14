@@ -9,11 +9,13 @@ namespace Trading.Commands.AuthCommands
 {
     public class GetTokenCommand : IRequest<object>
     {
-        public AuthRequestDTO AuthDTO { get;}
+        public string Login { get; }
+        public string Password { get; }
 
-        public GetTokenCommand(AuthRequestDTO authDTO)
+        public GetTokenCommand(string login, string password)
         {
-            AuthDTO = authDTO;
+            Login = login;
+            Password = password;
         }
     }
 }

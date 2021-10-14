@@ -9,11 +9,17 @@ namespace Trading.Commands.UserCommands
 {
     public class UpdateUserCommand : IRequest<User>
     {
-        public User User { get; }
+        public int Id { get; }
+        public string Password { get; }
+        public string  Email { get; }
+        public string Role { get; }
 
-        public UpdateUserCommand(User user)
+        public UpdateUserCommand(int id, string password, string email, string role)
         {
-            User = user;
+            Id = id;
+            Password = password;
+            Email = email;
+            Role = role;
         }
     }
 }

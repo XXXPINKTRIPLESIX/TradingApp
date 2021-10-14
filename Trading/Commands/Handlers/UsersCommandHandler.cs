@@ -25,7 +25,9 @@ namespace Trading.Commands.Handlers
 
         public async Task<bool> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            await _context.Users.AddAsync(request.User, cancellationToken);
+            User user = new User(request.Login, request.Password, request.Email, request.Role);
+
+            await _context.Users.AddAsync(user, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             return true;
@@ -33,24 +35,32 @@ namespace Trading.Commands.Handlers
 
         public async Task<User> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.FindAsync(request.User.Id, cancellationToken);
+            var user = await _context.Users.FindAsync(request.Id, cancellationToken);
 
             if (user == null)
+            {
                 return null;
+            }
 
-            _context.Users.Update(request.User);
+            user.Password = request.Password;
+            user.Email = request.Email;
+            user.Role = request.Role;
+
+            _context.Users.Update(user);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return await _context.Users.FindAsync(request.User.Id, cancellationToken);
+            return user;
         }
 
         public async Task<User> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _context.Users.FindAsync(request.Id, cancellationToken);
 
-            if (user == null)
+            if (user == null) 
+            {
                 return null;
-
+            }
+                
             _context.Users.Remove(user);
             await _context.SaveChangesAsync(cancellationToken);
 

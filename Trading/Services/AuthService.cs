@@ -26,9 +26,9 @@ namespace Trading.Services
             _configuration = configuration;
         }
 
-        public async Task<object> GetTokenAsync(AuthRequestDTO authRequest)
+        public async Task<object> GetTokenAsync(string login, string password)
         {
-            var identity = await GetIdentityAsync(authRequest.Login, authRequest.Password);
+            var identity = await GetIdentityAsync(login, password);
 
             if (identity == null)
                 return null;

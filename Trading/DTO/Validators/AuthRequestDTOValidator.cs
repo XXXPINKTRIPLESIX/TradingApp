@@ -7,7 +7,7 @@ using Trading.DTO.Request;
 
 namespace Trading.DTO.Validators
 {
-    public class AuthRequestDTOValidator : AbstractValidator<AuthRequestDTO>
+    public class AuthRequestDTOValidator : AbstractValidator<AuthDTO>
     {
         public AuthRequestDTOValidator()
         {

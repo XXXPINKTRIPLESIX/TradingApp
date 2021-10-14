@@ -32,7 +32,10 @@ namespace Trading.Controllers
             var res = await _mediator.Send(new GetCurrenciesQuery());
 
             if (res == null)
+            {
                 return NotFound();
+            }
+
             return Ok(res);
         }
 
@@ -45,7 +48,10 @@ namespace Trading.Controllers
             var res = await _mediator.Send(new GetCurrencyQuery(id));
 
             if (res == null)
+            {
                 return NotFound();
+            }
+
             return Ok(res);
         }
 
@@ -53,51 +59,40 @@ namespace Trading.Controllers
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             var res = await _mediator.Send(new DeleteCurrencyCommand(id));
 
             if (res == null)
+            {
                 return NotFound();
+            }
+
             return Ok(res);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Currency currency)
+        public async Task<IActionResult> Create([FromBody] CreateCurrencyDTO currencyDTO)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            await _mediator.Send(new CreateCurrencyCommand(currency));
+            await _mediator.Send(new CreateCurrencyCommand(currencyDTO.CurrencyCode, currencyDTO.Type));
 
             return NoContent();
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> Update([FromBody] Currency currency)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var res = await _mediator.Send(new UpdateCurrencyCommand(currency));
-
-            if (res == null)
-                return NotFound();
-            return Ok(res);
-        }
-
         [HttpPost]
         [Route("Exchange")]
-        public async Task<IActionResult> Exchange([FromBody] FiatRequestExchangeDTO exchangeDTO)
+        public async Task<IActionResult> Exchange([FromBody] FiatExchangeDTO exchangeDTO)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var res = await _mediator.Send(new ExchangeCurrencyCommand(exchangeDTO));
+            var res = await _mediator.Send(new ExchangeCurrencyCommand(exchangeDTO.BaseCurrency, exchangeDTO.TargetCurrency, exchangeDTO.Amount));
 
             if (res.SuccessResponse == null)
-                return BadRequest(res.ErrorResponse);                    
-            return Ok(res.SuccessResponse);                
+            {
+                return BadRequest(res.ErrorResponse);
+            }
+
+            return Ok(res.SuccessResponse);
         }
 
         [HttpPost]
@@ -105,12 +100,17 @@ namespace Trading.Controllers
         public async Task<IActionResult> CurrencyRate([FromQuery] string baseCurrency)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             var res = await _mediator.Send(new RateCurrencyCommand(baseCurrency));
 
             if (res.SuccessResponse == null)
+            {
                 return BadRequest(res.ErrorResponse);
+            }
+
             return Ok(res.SuccessResponse);
         }
     }

@@ -9,14 +9,13 @@ namespace Trading.Commands.CurrencyCommands
 {
     public class CreateCurrencyCommand : IRequest<bool>
     {
-        //public Currency Currency { get; }
-        public string CurrencyCode { get; set; }
-        public List<Account> Accounts { get; set; }
-        public CurrencyType Type { get; set; }
+        public string CurrencyCode { get; }
+        public CurrencyType Type { get; }
 
-        public CreateCurrencyCommand(Currency currency)
+        public CreateCurrencyCommand(string currencyCode, CurrencyType type)
         {
-            Currency = currency;
+            CurrencyCode = currencyCode;
+            Type = type;
         }
     }
 }

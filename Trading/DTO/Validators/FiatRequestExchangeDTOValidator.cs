@@ -7,7 +7,7 @@ using Trading.DTO.Request;
 
 namespace Trading.DTO.Validators
 {
-    public class FiatRequestExchangeDTOValidator : AbstractValidator<FiatRequestExchangeDTO>
+    public class FiatRequestExchangeDTOValidator : AbstractValidator<FiatExchangeDTO>
     {
         public FiatRequestExchangeDTOValidator()
         {
