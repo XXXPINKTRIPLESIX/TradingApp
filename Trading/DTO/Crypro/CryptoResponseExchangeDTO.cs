@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Trading.DTO.Response.Crypro
+namespace Trading.DTO.Crypro
 {
     public class CryptoResponseExchangeDTO
     {

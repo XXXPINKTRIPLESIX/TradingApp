@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Trading.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Trading.DTO.Response.Fiat;
+using Trading.DTO.Fiat;
 using System.Text;
 
 namespace Trading.Services

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Trading.DTO.Response.Crypro;
+using Trading.DTO.Crypro;
 using Trading.Interfaces;
 
 namespace Trading.Services

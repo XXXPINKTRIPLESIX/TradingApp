@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Trading.Commands.CurrencyCommands;
 using Trading.Data;
 using Trading.Data.Models;
-using Trading.DTO.Response.Fiat;
+using Trading.DTO.Fiat;
 using Trading.Interfaces;
 using Trading.Services;
 
