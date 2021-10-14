@@ -6,9 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trading.Commands.UserCommands;
-using Trading.Data.Models;
-using Trading.DTO.Request;
-using Trading.Interfaces;
 using Trading.Queries.UserQueries;
 
 namespace Trading.Controllers

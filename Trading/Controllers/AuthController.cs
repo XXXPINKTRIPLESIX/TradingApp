@@ -7,10 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Trading.Commands.AuthCommands;
-using Trading.Data.Models;
-using Trading.DTO.Request;
-using Trading.Interfaces;
-using Trading.Services;
 
 namespace Trading.Controllers
 {

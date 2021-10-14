@@ -9,8 +9,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Trading.Data;
-using Trading.Data.Models;
-using Trading.DTO.Request;
 using Trading.Interfaces;
 
 namespace Trading.Services

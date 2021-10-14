@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trading.Commands.UserCommands;
-using Trading.DTO.Request;
 
 namespace Trading.Validators
 {

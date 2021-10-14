@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Trading.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Trading.DTO.Response.Fiat;
-using Trading.DTO.Request;
 using System.Text;
 
 namespace Trading.Services
