@@ -46,7 +46,7 @@ namespace Trading.Controllers
                 return BadRequest();
             }
 
-            var res = await _mediator.Send(new GetAccountQuery());
+            var res = await _mediator.Send(new GetAccountQuery(id));
 
             if (res == null)
             {

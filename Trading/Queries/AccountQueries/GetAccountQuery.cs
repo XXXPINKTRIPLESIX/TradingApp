@@ -9,6 +9,11 @@ namespace Trading.Queries.AccountQueries
 {
     public class GetAccountQuery : IRequest<Account>
     {
-        public int Id { get; set; }
+        public int Id { get; }
+
+        public GetAccountQuery(int id)
+        {
+            Id = id; 
+        }
     }
 }

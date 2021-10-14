@@ -40,14 +40,14 @@ namespace Trading.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] GetUserQuery query)
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var res = await _mediator.Send(query);
+            var res = await _mediator.Send(new GetUserQuery(id));
 
             if (res == null)
             {
