@@ -24,12 +24,12 @@ namespace Trading.Queries.Handlers
 
         public async Task<Account> Handle(GetAccountQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.Id);
+            return await _context.Accounts.FindAsync(request.Id, cancellationToken);
         }
 
         public async Task<List<Account>> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Accounts.ToListAsync();
+            return await _context.Accounts.ToListAsync(cancellationToken);
         }
     }
 }

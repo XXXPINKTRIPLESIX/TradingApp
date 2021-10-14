@@ -11,8 +11,8 @@ using Trading.Queries.CurrencyQueries;
 
 namespace Trading.Queries.Handlers
 {
-    public class CurrenciesQueryHandler : 
-        IRequestHandler<GetCurrencyQuery, Currency>, 
+    public class CurrenciesQueryHandler :
+        IRequestHandler<GetCurrencyQuery, Currency>,
         IRequestHandler<GetCurrenciesQuery, List<Currency>>
     {
         private readonly DatabaseContext _context;
@@ -24,12 +24,12 @@ namespace Trading.Queries.Handlers
 
         public async Task<Currency> Handle(GetCurrencyQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Currencies.FirstOrDefaultAsync(c => c.Id == request.Id);
+            return await _context.Currencies.FindAsync(request.Id, cancellationToken);
         }
 
         public async Task<List<Currency>> Handle(GetCurrenciesQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Currencies.ToListAsync();
+            return await _context.Currencies.ToListAsync(cancellationToken);
         }
     }
 }

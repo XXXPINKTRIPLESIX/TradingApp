@@ -24,12 +24,12 @@ namespace Trading.Queries.Handlers
 
         public async Task<User> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == request.Id);
+            return await _context.Users.FindAsync(request.Id, cancellationToken);
         }
 
         public async Task<List<User>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.ToListAsync(cancellationToken);
         }
     }
 }
