@@ -92,5 +92,17 @@ namespace Trading.Controllers
 
             return Ok(res);
         }
+
+        public async Task<IActionResult> AddPersonalData([FromBody] AddPersonalDataCommand command) 
+        {
+            var res = await _mediator.Send(command);
+
+            if(res == null) 
+            {
+                return NotFound();
+            }
+
+            return Ok(res);
+        }
     }
 }

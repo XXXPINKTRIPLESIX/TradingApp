@@ -11,10 +11,10 @@ namespace Trading.Validators
     {
         public UpdateUserCommandValidator()
         {
-            RuleFor(u => u.Id).NotNull().NotEmpty().WithMessage("Id null or empty.");
-            RuleFor(u => u.Password).NotNull().NotEmpty().WithMessage("Password null or empty.");
-            RuleFor(u => u.Email).NotNull().NotEmpty().WithMessage("Email null or empty.");
-            RuleFor(u => u.Role).NotNull().NotEmpty().WithMessage("Role null or empty.");
+            RuleFor(u => u.Id).NotNull().WithMessage("Id is null.");
+            RuleFor(u => u.Password).NotEmpty().WithMessage("Password is empty.");
+            RuleFor(u => u.Email).NotEmpty().WithMessage("Email is empty.");
+            RuleFor(u => u.Role).NotEmpty().WithMessage("Role is empty.");
         }
     }
 }

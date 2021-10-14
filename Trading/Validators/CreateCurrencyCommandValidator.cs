@@ -11,7 +11,7 @@ namespace Trading.Validators
     {
         public CreateCurrencyCommandValidator()
         {
-            RuleFor(c => c.CurrencyCode).NotNull().NotEmpty().WithMessage("CurrencyCode null or empty.");
+            RuleFor(c => c.CurrencyCode).NotEmpty().WithMessage("CurrencyCode is empty.");
             RuleFor(c => c.Type).IsInEnum().WithMessage("Incorrect type value.");
         }
     }

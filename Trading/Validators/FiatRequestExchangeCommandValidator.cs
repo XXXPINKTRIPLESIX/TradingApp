@@ -11,9 +11,9 @@ namespace Trading.Validators
     {
         public FiatRequestExchangeCommandValidator()
         {
-            RuleFor(f => f.TargetCurrency).NotEmpty().WithMessage("Target currency is empty.");
-            RuleFor(f => f.BaseCurrency).NotEmpty().WithMessage("Base currency is empty.");
-            RuleFor(f => f.Amount).GreaterThan(0).WithMessage("Amount is less or equal 0.");
+            RuleFor(f => f.TargetCurrency).NotEmpty().WithMessage("TargetCurrency is empty.");
+            RuleFor(f => f.BaseCurrency).NotEmpty().WithMessage("BaseCurrency is empty.");
+            RuleFor(f => f.Amount).GreaterThan(0).WithMessage("Amount is less or equal than 0.");
         }
     }
 }

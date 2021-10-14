@@ -11,8 +11,8 @@ namespace Trading.Validators
     {
         public CreateAccountCommandValidator()
         {
-            RuleFor(a => a.CurrencyId).NotNull().NotEmpty().WithMessage("CurrencyId null or empty.");
-            RuleFor(a => a.UserId).NotNull().NotEmpty().WithMessage("UserId null or empty.");
+            RuleFor(a => a.CurrencyId).NotNull().WithMessage("CurrencyId is null.");
+            RuleFor(a => a.UserId).NotNull().WithMessage("UserId is null.");
         }
     }
 }

@@ -14,7 +14,9 @@ namespace Trading.Commands.Handlers
     public class UsersCommandHandler :
         IRequestHandler<CreateUserCommand, bool>,
         IRequestHandler<UpdateUserCommand, User>,
-        IRequestHandler<DeleteUserCommand, User>
+        IRequestHandler<DeleteUserCommand, User>,
+        IRequestHandler<AddPersonalDataCommand, User>
+        //IRequestHandler<UpdatePersonalDataCommand, User>
     {
         private readonly DatabaseContext _context;
 
@@ -66,5 +68,37 @@ namespace Trading.Commands.Handlers
 
             return user;
         }
+
+        public async Task<User> Handle(AddPersonalDataCommand request, CancellationToken cancellationToken)
+        {
+            var user = await _context.Users.FindAsync(request.UserId, cancellationToken);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            user.PersonalData = new PersonalData(request.Name, request.LastName, request.Surname, request.PhoneNumber, request.Description);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return user;
+        }
+
+        //public Task<User> Handle(UpdatePersonalDataCommand request, CancellationToken cancellationToken)
+        //{
+        //    var user = await _context.Users.FindAsync(request.UserId, cancellationToken);
+
+        //    if (user == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    user.PersonalData = new PersonalData(request.Name, request.LastName, request.Surname, request.PhoneNumber, request.Description);
+
+        //    await _context.SaveChangesAsync(cancellationToken);
+
+        //    return user;
+        //}
     }
 }

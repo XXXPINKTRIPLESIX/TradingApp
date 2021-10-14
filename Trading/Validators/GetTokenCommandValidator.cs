@@ -11,8 +11,8 @@ namespace Trading.Validators
     {
         public GetTokenCommandValidator()
         {
-            RuleFor(a => a.Login).NotNull().NotEmpty().WithMessage("Login null or empty.");
-            RuleFor(a => a.Password).NotNull().NotEmpty().WithMessage("Password null or empty.");
+            RuleFor(a => a.Login).NotEmpty().WithMessage("Login is empty.");
+            RuleFor(a => a.Password).NotEmpty().WithMessage("Password is empty.");
         }
     }
 }
