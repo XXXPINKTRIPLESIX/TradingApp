@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trading.Commands.CurrencyCommands;
 using Trading.DTO.Request;
 
-namespace Trading.DTO.Validators
+namespace Trading.Validators
 {
-    public class FiatRequestExchangeDTOValidator : AbstractValidator<FiatExchangeDTO>
+    public class FiatRequestExchangeCommandValidator : AbstractValidator<ExchangeCurrencyCommand>
     {
-        public FiatRequestExchangeDTOValidator()
+        public FiatRequestExchangeCommandValidator()
         {
             RuleFor(f => f.TargetCurrency).NotEmpty().WithMessage("Target currency is empty.");
             RuleFor(f => f.BaseCurrency).NotEmpty().WithMessage("Base currency is empty.");

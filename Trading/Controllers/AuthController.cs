@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Trading.Commands.AuthCommands;
 using Trading.Data.Models;
 using Trading.DTO.Request;
 using Trading.Interfaces;
@@ -18,20 +19,18 @@ namespace Trading.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
-        private readonly AuthService _authService;
         private readonly IMediator _mediator;
 
-        public AuthController(ILogger<AuthController> logger, IMediator mediator, IService authService)
+        public AuthController(ILogger<AuthController> logger, IMediator mediator)
         {
             _logger = logger;
-            _authService = authService as AuthService;
             _mediator = mediator;
         }
 
         [HttpPost("/token")]
-        public async Task<IActionResult> Token([FromBody]AuthDTO authDTO)
+        public async Task<IActionResult> Token([FromBody]GetTokenCommand command)
         {
-            var response = await _authService.GetTokenAsync(authDTO.Login, authDTO.Password);
+            var response = await _mediator.Send(command);
 
             if (response == null)
             {

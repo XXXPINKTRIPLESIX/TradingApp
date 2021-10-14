@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trading.Commands.UserCommands;
 using Trading.DTO.Request;
 
-namespace Trading.DTO.Validators
+namespace Trading.Validators
 {
-    public class UpdateUserDTOValidator : AbstractValidator<UpdateUserDTO>
+    public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
     {
-        public UpdateUserDTOValidator()
+        public UpdateUserCommandValidator()
         {
             RuleFor(u => u.Id).NotNull().NotEmpty().WithMessage("Id null or empty.");
             RuleFor(u => u.Password).NotNull().NotEmpty().WithMessage("Password null or empty.");

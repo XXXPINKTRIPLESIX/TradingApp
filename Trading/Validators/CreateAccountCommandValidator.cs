@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trading.Commands.AccountCommands;
 using Trading.DTO.Request;
 
-namespace Trading.DTO.Validators
+namespace Trading.Validators
 {
-    public class CreateAccountDTOValidator : AbstractValidator<CreateAccountDTO>
+    public class CreateAccountCommandValidator : AbstractValidator<CreateAccountCommand>
     {
-        public CreateAccountDTOValidator()
+        public CreateAccountCommandValidator()
         {
             RuleFor(a => a.CurrencyId).NotNull().NotEmpty().WithMessage("CurrencyId null or empty.");
             RuleFor(a => a.UserId).NotNull().NotEmpty().WithMessage("UserId null or empty.");

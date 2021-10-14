@@ -57,9 +57,9 @@ namespace Trading.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateAccountDTO accountDTO)
+        public async Task<IActionResult> Create([FromBody] CreateAccountCommand command)
         {
-            await _mediator.Send(new CreateAccountCommand(accountDTO.UserId, accountDTO.CurrencyId));
+            await _mediator.Send(command);
 
             return NoContent();
         }

@@ -76,17 +76,17 @@ namespace Trading.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserDTO userDTO)
+        public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
-            await _mediator.Send(new CreateUserCommand(userDTO.Login, userDTO.Password, userDTO.Email, userDTO.Role));
+            await _mediator.Send(command);
 
             return NoContent();
         }
 
         [HttpPatch]
-        public async Task<IActionResult> Update([FromBody] UpdateUserDTO userDTO)
+        public async Task<IActionResult> Update([FromBody] UpdateUserCommand command)
         {
-            var res = await _mediator.Send(new UpdateUserCommand(userDTO.Id, userDTO.Password, userDTO.Email, userDTO.Role));
+            var res = await _mediator.Send(command);
 
             if (res == null)
             {

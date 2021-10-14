@@ -76,18 +76,18 @@ namespace Trading.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateCurrencyDTO currencyDTO)
+        public async Task<IActionResult> Create([FromBody] CreateCurrencyCommand createCommand)
         {
-            await _mediator.Send(new CreateCurrencyCommand(currencyDTO.CurrencyCode, currencyDTO.Type));
+            await _mediator.Send(createCommand);
 
             return NoContent();
         }
 
         [HttpPost]
         [Route("Exchange")]
-        public async Task<IActionResult> Exchange([FromBody] FiatExchangeDTO exchangeDTO)
+        public async Task<IActionResult> Exchange([FromBody] ExchangeCurrencyCommand command)
         {
-            var res = await _mediator.Send(new ExchangeCurrencyCommand(exchangeDTO.BaseCurrency, exchangeDTO.TargetCurrency, exchangeDTO.Amount));
+            var res = await _mediator.Send(command);
 
             if (res.SuccessResponse == null)
             {
