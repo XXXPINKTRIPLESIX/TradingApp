@@ -38,14 +38,9 @@ namespace Trading.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id)
+        public async Task<IActionResult> Get([FromRoute] GetCurrencyQuery query)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var res = await _mediator.Send(new GetCurrencyQuery(id));
+            var res = await _mediator.Send(query);
 
             if (res == null)
             {
@@ -56,14 +51,9 @@ namespace Trading.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] DeleteCurrencyCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var res = await _mediator.Send(new DeleteCurrencyCommand(id));
+            var res = await _mediator.Send(command);
 
             if (res == null)
             {
@@ -97,9 +87,9 @@ namespace Trading.Controllers
 
         [HttpPost]
         [Route("Rate")]
-        public async Task<IActionResult> CurrencyRate([FromQuery] string baseCurrency)
+        public async Task<IActionResult> CurrencyRate([FromQuery] RateCurrencyCommand command)
         {
-            var res = await _mediator.Send(new RateCurrencyCommand(baseCurrency));
+            var res = await _mediator.Send(command);
 
             if (res.SuccessResponse == null)
             {

@@ -9,11 +9,6 @@ namespace Trading.Queries.UserQueries
 {
     public class GetUserQuery : IRequest<User>
     {
-        public int Id { get; }
-
-        public GetUserQuery(int id)
-        {
-            Id = id;
-        }
+        public int Id { get; set; }
     }
 }

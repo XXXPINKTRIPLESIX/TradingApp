@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Trading.Interfaces
 {
-    public interface IService
+    public interface ICryptoService
     {
     }
 }

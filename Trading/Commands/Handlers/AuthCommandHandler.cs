@@ -14,7 +14,7 @@ namespace Trading.Commands.Handlers
     {
         private readonly AuthService _authService;
 
-        public AuthCommandHandler(IService service)
+        public AuthCommandHandler(IAuthService service)
         {
             _authService = service as AuthService;
         }

@@ -7,10 +7,12 @@ using Trading.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Trading.DTO.Fiat;
 using System.Text;
+using Trading.OptionBinders;
+using System.Net.Http.Headers;
 
 namespace Trading.Services
 {
-    public class FiatCurrencyService : IService
+    public class FiatCurrencyService : IFiatService
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
@@ -18,18 +20,22 @@ namespace Trading.Services
         {
             _configuration = configuration;
             _httpClient = clientFactory.CreateClient();
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task<FiatApiResponseDTO> ExchangeAsync(string baseCurrency, string targetCurrency, double amount)
         {
-            StringBuilder urlBuilder = new StringBuilder(_configuration["FiatApi:BaseUrl"]);
-            urlBuilder.Append(_configuration["FiatApi:Key"]);
-            urlBuilder.Append("/pair/");
-            urlBuilder.Append(baseCurrency + "/");
-            urlBuilder.Append(targetCurrency + "/");
-            urlBuilder.Append(amount);
+            var options = GetOptions();
 
-            using (HttpResponseMessage response = await _httpClient.GetAsync(urlBuilder.ToString()))
+            string url = $"" +
+                $"{options.BaseUrl}/" +
+                $"{options.Key}" +
+                $"/pair/" +
+                $"{baseCurrency}/" +
+                $"{targetCurrency}/" +
+                $"{amount}";
+
+            using (HttpResponseMessage response = await _httpClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
                 {
@@ -42,19 +48,22 @@ namespace Trading.Services
             }
         }
 
-        public async Task<FiatApiResponseDTO> RatesAsync(string baseCurrencyCode)
+        public async Task<FiatApiResponseDTO> RatesAsync(string baseCurrency)
         {
-            StringBuilder urlBuilder = new StringBuilder(_configuration["FiatApi:BaseUrl"]);
-            urlBuilder.Append(_configuration["FiatApi:Key"] + "/");
-            urlBuilder.Append("latest/");
-            urlBuilder.Append(baseCurrencyCode);
+            var options = GetOptions();
 
-            using (HttpResponseMessage response = await _httpClient.GetAsync(urlBuilder.ToString()))
+            string url = $"" +
+                $"{options.BaseUrl}/" +
+                $"{options.Key}" +
+                $"/latest/" +
+                $"{baseCurrency}";
+
+            using (HttpResponseMessage response = await _httpClient.GetAsync(url))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     var res = await response.Content.ReadAsAsync<FiatResponseDTO>();
-                    res.ConversionRates.Remove(baseCurrencyCode);
+                    res.ConversionRates.Remove(baseCurrency);
                     return new FiatApiResponseDTO() { SuccessResponse = res, ErrorResponse = null };
                 }
                 else
@@ -63,5 +72,14 @@ namespace Trading.Services
                 }
             }
         }
+
+        private FiatApiOptions GetOptions() 
+        {
+            var options = new FiatApiOptions();
+            _configuration.GetSection(FiatApiOptions.FiatApi).Bind(options);
+
+            return options;
+        }
+
     }
 }

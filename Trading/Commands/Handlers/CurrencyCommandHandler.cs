@@ -23,7 +23,7 @@ namespace Trading.Commands.Handlers
         private readonly DatabaseContext _context;
         private readonly FiatCurrencyService _currencyService;
 
-        public CurrencyCommandHandler(DatabaseContext context, IService service)
+        public CurrencyCommandHandler(DatabaseContext context, IFiatService service)
         {
             _context = context;
             _currencyService = service as FiatCurrencyService;
@@ -41,7 +41,7 @@ namespace Trading.Commands.Handlers
 
         public async Task<Currency> Handle(DeleteCurrencyCommand request, CancellationToken cancellationToken)
         {
-            var currency = await _context.Currencies.FindAsync(request.Id, cancellationToken);
+            var currency = await _context.Currencies.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
             if (currency == null)
             {

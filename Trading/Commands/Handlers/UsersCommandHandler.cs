@@ -37,7 +37,7 @@ namespace Trading.Commands.Handlers
 
         public async Task<User> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.FindAsync(request.Id, cancellationToken);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
 
             if (user == null)
             {
@@ -56,7 +56,7 @@ namespace Trading.Commands.Handlers
 
         public async Task<User> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.FindAsync(request.Id, cancellationToken);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
 
             if (user == null) 
             {
@@ -64,6 +64,7 @@ namespace Trading.Commands.Handlers
             }
                 
             _context.Users.Remove(user);
+
             await _context.SaveChangesAsync(cancellationToken);
 
             return user;
@@ -71,7 +72,7 @@ namespace Trading.Commands.Handlers
 
         public async Task<User> Handle(AddPersonalDataCommand request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.FindAsync(request.UserId, cancellationToken);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
             if (user == null)
             {

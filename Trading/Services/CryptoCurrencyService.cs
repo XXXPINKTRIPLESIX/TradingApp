@@ -9,7 +9,7 @@ using Trading.Interfaces;
 
 namespace Trading.Services
 {
-    public class CryptoCurrencyService : IService
+    public class CryptoCurrencyService : ICryptoService
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;

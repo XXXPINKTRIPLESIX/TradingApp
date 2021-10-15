@@ -24,7 +24,7 @@ namespace Trading.Queries.Handlers
 
         public async Task<Currency> Handle(GetCurrencyQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Currencies.FindAsync(request.Id, cancellationToken);
+            return await _context.Currencies.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
         }
 
         public async Task<List<Currency>> Handle(GetCurrenciesQuery request, CancellationToken cancellationToken)

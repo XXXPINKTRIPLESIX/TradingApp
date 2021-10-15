@@ -24,7 +24,7 @@ namespace Trading.Queries.Handlers
 
         public async Task<Account> Handle(GetAccountQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Accounts.FindAsync(request.Id, cancellationToken);
+            return await _context.Accounts.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
         }
 
         public async Task<List<Account>> Handle(GetAccountsQuery request, CancellationToken cancellationToken)

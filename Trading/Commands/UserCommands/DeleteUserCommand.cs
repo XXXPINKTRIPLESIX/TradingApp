@@ -9,11 +9,6 @@ namespace Trading.Commands.UserCommands
 {
     public class DeleteUserCommand : IRequest<User>
     {
-        public int Id { get; }
-
-        public DeleteUserCommand(int id)
-        {
-            Id = id;
-        }
+        public int Id { get; set; }
     }
 }

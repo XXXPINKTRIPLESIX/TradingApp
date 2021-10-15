@@ -9,13 +9,7 @@ namespace Trading.Commands.CurrencyCommands
 {
     public class CreateCurrencyCommand : IRequest<bool>
     {
-        public string CurrencyCode { get; }
-        public CurrencyType Type { get; }
-
-        public CreateCurrencyCommand(string currencyCode, CurrencyType type)
-        {
-            CurrencyCode = currencyCode;
-            Type = type;
-        }
+        public string CurrencyCode { get; set; }
+        public CurrencyType Type { get; set; }
     }
 }

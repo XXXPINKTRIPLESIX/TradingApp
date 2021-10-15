@@ -13,7 +13,7 @@ using Trading.Interfaces;
 
 namespace Trading.Services
 {
-    public class AuthService : IService
+    public class AuthService : IAuthService
     {
         private readonly DatabaseContext _databaseContext;
         private readonly IConfiguration _configuration;

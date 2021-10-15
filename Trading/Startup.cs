@@ -42,9 +42,9 @@ namespace Trading
                 Configuration.GetConnectionString("ConnectionString")));
 
             //Services
-            services.AddTransient<IService, FiatCurrencyService>();
-            services.AddTransient<IService, CryptoCurrencyService>();
-            services.AddTransient<IService, AuthService>();
+            services.AddTransient<IFiatService, FiatCurrencyService>();
+            services.AddTransient<ICryptoService, CryptoCurrencyService>();
+            services.AddTransient<IAuthService, AuthService>();
 
             services.AddHttpClient();
 

@@ -37,14 +37,9 @@ namespace Trading.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id)
+        public async Task<IActionResult> Get([FromRoute] GetUserQuery query)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var res = await _mediator.Send(new GetUserQuery(id));
+            var res = await _mediator.Send(query);
 
             if (res == null)
             {
@@ -55,14 +50,9 @@ namespace Trading.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] DeleteUserCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var res = await _mediator.Send(new DeleteUserCommand(id));
+            var res = await _mediator.Send(command);
 
             if (res == null)
             {

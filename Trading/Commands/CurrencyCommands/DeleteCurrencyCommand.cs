@@ -9,11 +9,6 @@ namespace Trading.Commands.CurrencyCommands
 {
     public class DeleteCurrencyCommand : IRequest<Currency>
     {
-        public int Id { get; }
-
-        public DeleteCurrencyCommand(int id)
-        {
-            Id = id;
-        }
+        public int Id { get; set; }
     }
 }

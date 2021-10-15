@@ -9,15 +9,8 @@ namespace Trading.Commands.CurrencyCommands
 {
     public class ExchangeCurrencyCommand : IRequest<FiatApiResponseDTO>
     {
-        public string BaseCurrency { get; }
-        public string TargetCurrency { get; }
-        public double Amount { get; }
-
-        public ExchangeCurrencyCommand(string baseCurrency, string targetCurrency, double amount)
-        {
-            BaseCurrency = baseCurrency;
-            TargetCurrency = targetCurrency;
-            Amount = amount;
-        }
+        public string BaseCurrency { get; set; }
+        public string TargetCurrency { get; set; }
+        public double Amount { get; set; }
     }
 }

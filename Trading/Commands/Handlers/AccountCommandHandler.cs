@@ -34,7 +34,7 @@ namespace Trading.Commands.Handlers
 
         public async Task<Account> Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts.FindAsync(request.Id, cancellationToken);
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
 
             if (account == null) 
             {

@@ -9,11 +9,6 @@ namespace Trading.Queries.CurrencyQueries
 {
     public class GetCurrencyQuery : IRequest<Currency>
     {
-        public int Id { get; }
-
-        public GetCurrencyQuery(int id)
-        {
-            Id = id;
-        }
+        public int Id { get; set; }
     }
 }
