@@ -72,8 +72,8 @@ namespace Trading.Controllers
         }
 
         [HttpPost]
-        [Route("Exchange")]
-        public async Task<IActionResult> Exchange([FromBody] ExchangeCurrencyCommand command)
+        [Route("fiat/exchange")]
+        public async Task<IActionResult> FiatExchange([FromBody] ExchangeFiatCurrencyCommand command)
         {
             var res = await _mediator.Send(command);
 
@@ -85,11 +85,11 @@ namespace Trading.Controllers
             return Ok(res.SuccessResponse);
         }
 
-        [HttpPost]
-        [Route("Rate")]
-        public async Task<IActionResult> CurrencyRate([FromQuery] RateCurrencyCommand command)
+        [HttpGet]
+        [Route("fiat/rates")]
+        public async Task<IActionResult> FiatCurrencyRates([FromQuery] GetRatesFiatCurrencyQuery query)
         {
-            var res = await _mediator.Send(command);
+            var res = await _mediator.Send(query);
 
             if (res.SuccessResponse == null)
             {
@@ -97,6 +97,34 @@ namespace Trading.Controllers
             }
 
             return Ok(res.SuccessResponse);
+        }
+
+        [HttpPost]
+        [Route("crypto/exchange")]
+        public async Task<IActionResult> CryptoExchange([FromBody] ExchangeCryptoCurrencyCommand command)
+        {
+            var res = await _mediator.Send(command);
+
+            if (res == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(res);
+        }
+
+        [HttpGet]
+        [Route("crypto/rates")]
+        public async Task<IActionResult> CryptoCurrencyRates([FromQuery] GetRatesCryptoCurrencyQuery query)
+        {
+            var res = await _mediator.Send(query);
+
+            if (res == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(res);
         }
     }
 }

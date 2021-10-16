@@ -7,7 +7,7 @@ using Trading.DTO.Fiat;
 
 namespace Trading.Commands.CurrencyCommands
 {
-    public class ExchangeCurrencyCommand : IRequest<FiatApiResponseDTO>
+    public class ExchangeFiatCurrencyCommand : IRequest<FiatApiResponseDTO>
     {
         public string BaseCurrency { get; set; }
         public string TargetCurrency { get; set; }

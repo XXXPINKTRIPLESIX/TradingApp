@@ -7,9 +7,9 @@ using Trading.Commands.CurrencyCommands;
 
 namespace Trading.Validators
 {
-    public class ExchangeCommandValidator : AbstractValidator<ExchangeCurrencyCommand>
+    public class ExchangeFiatCurrencyCommandValidator : AbstractValidator<ExchangeFiatCurrencyCommand>
     {
-        public ExchangeCommandValidator()
+        public ExchangeFiatCurrencyCommandValidator()
         {
             RuleFor(f => f.TargetCurrency).NotEmpty().WithMessage("TargetCurrency is empty.");
             RuleFor(f => f.BaseCurrency).NotEmpty().WithMessage("BaseCurrency is empty.");

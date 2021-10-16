@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Trading.Commands.CurrencyCommands;
 using Trading.Data;
 using Trading.Data.Models;
+using Trading.DTO.Crypro;
 using Trading.DTO.Fiat;
 using Trading.Interfaces;
 using Trading.Services;
@@ -17,16 +18,18 @@ namespace Trading.Commands.Handlers
     public class CurrencyCommandHandler :
         IRequestHandler<CreateCurrencyCommand, bool>,
         IRequestHandler<DeleteCurrencyCommand, Currency>,
-        IRequestHandler<ExchangeCurrencyCommand, FiatApiResponseDTO>,
-        IRequestHandler<RateCurrencyCommand, FiatApiResponseDTO>
+        IRequestHandler<ExchangeFiatCurrencyCommand, FiatApiResponseDTO>,
+        IRequestHandler<ExchangeCryptoCurrencyCommand, CryptoResponseExchangeDTO>
     {
         private readonly DatabaseContext _context;
-        private readonly FiatCurrencyService _currencyService;
+        private readonly FiatCurrencyService _fiatService;
+        private readonly CryptoCurrencyService _cryptoService;
 
-        public CurrencyCommandHandler(DatabaseContext context, IFiatService service)
+        public CurrencyCommandHandler(DatabaseContext context, IFiatService fiatService, ICryptoService cryptoService)
         {
             _context = context;
-            _currencyService = service as FiatCurrencyService;
+            _fiatService = fiatService as FiatCurrencyService;
+            _cryptoService = cryptoService as CryptoCurrencyService;
         }
 
         public async Task<bool> Handle(CreateCurrencyCommand request, CancellationToken cancellationToken)
@@ -54,14 +57,14 @@ namespace Trading.Commands.Handlers
             return currency;
         }
 
-        public async Task<FiatApiResponseDTO> Handle(ExchangeCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<FiatApiResponseDTO> Handle(ExchangeFiatCurrencyCommand request, CancellationToken cancellationToken)
         {
-            return await _currencyService.ExchangeAsync(request.BaseCurrency, request.TargetCurrency, request.Amount);
+            return await _fiatService.ExchangeAsync(request.BaseCurrency, request.TargetCurrency, request.Amount);
         }
 
-        public async Task<FiatApiResponseDTO> Handle(RateCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<CryptoResponseExchangeDTO> Handle(ExchangeCryptoCurrencyCommand request, CancellationToken cancellationToken)
         {
-            return await _currencyService.RatesAsync(request.BaseCurrency);
+            return await _cryptoService.Exchange(request.BaseCurrency, request.TargetCurrency, request.Amount);
         }
     }
 }

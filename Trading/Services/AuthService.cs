@@ -10,18 +10,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Trading.Data;
 using Trading.Interfaces;
+using Trading.OptionBinders;
 
 namespace Trading.Services
 {
     public class AuthService : IAuthService
     {
         private readonly DatabaseContext _databaseContext;
-        private readonly IConfiguration _configuration;
+        private readonly AuthOptions _options;
 
         public AuthService(DatabaseContext databaseContext, IConfiguration configuration)
         {
             _databaseContext = databaseContext;
-            _configuration = configuration;
+            
+            _options = configuration.GetSection(AuthOptions.JWT).Get<AuthOptions>();
         }
 
         public async Task<object> GetTokenAsync(string login, string password)
@@ -31,14 +33,17 @@ namespace Trading.Services
             if (identity == null)
                 return null;
 
+            var date = DateTime.UtcNow;
+
             // создаем JWT-токен
             var jwt = new JwtSecurityToken(
-                    issuer: _configuration["Issuer"],
-                    audience: _configuration["Audience"],
-                    notBefore: DateTime.UtcNow,
+                    issuer: _options.Issuer,
+                    audience: _options.Audience,
+                    notBefore: date,
                     claims: identity.Claims,
-                    expires: DateTime.UtcNow.AddDays(double.Parse(_configuration["Lifetime"])),
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])), SecurityAlgorithms.HmacSha256));
+                    expires: date.AddDays(_options.Lifetime),
+                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key)), SecurityAlgorithms.HmacSha256));
+
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return new

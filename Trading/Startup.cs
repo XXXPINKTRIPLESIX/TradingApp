@@ -22,6 +22,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Trading.Middlewares;
+using System.Net.Http.Headers;
+using Trading.OptionBinders;
 
 namespace Trading
 {
@@ -47,6 +49,21 @@ namespace Trading
             services.AddTransient<IAuthService, AuthService>();
 
             services.AddHttpClient();
+
+            //FiatApiOptions fiatOptions = Configuration.GetSection(FiatApiOptions.FiatApi).Get<FiatApiOptions>();
+
+            //services.AddHttpClient<IFiatService, FiatCurrencyService>(client => 
+            //{
+            //    client.BaseAddress = new Uri(fiatOptions.BaseUrl);
+            //});
+
+            //CryptoApiOptions cryptoOptions = Configuration.GetSection(CryptoApiOptions.CryptoApi).Get<CryptoApiOptions>();
+
+            //services.AddHttpClient<ICryptoService, CryptoCurrencyService>(client =>
+            //{
+            //    client.BaseAddress = new Uri(cryptoOptions.BaseUrl);
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(cryptoOptions.Header, cryptoOptions.Key);
+            //});
 
             //MediatR
             services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.GetExecutingAssembly());

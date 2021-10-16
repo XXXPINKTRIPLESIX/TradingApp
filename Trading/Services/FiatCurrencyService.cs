@@ -14,23 +14,22 @@ namespace Trading.Services
 {
     public class FiatCurrencyService : IFiatService
     {
-        private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private readonly FiatApiOptions _options;
+
         public FiatCurrencyService(IConfiguration configuration, IHttpClientFactory clientFactory)
         {
-            _configuration = configuration;
             _httpClient = clientFactory.CreateClient();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            _options = configuration.GetSection(FiatApiOptions.FiatApi).Get<FiatApiOptions>();
+
+            _httpClient.BaseAddress = new Uri(_options.BaseUrl);
         }
 
         public async Task<FiatApiResponseDTO> ExchangeAsync(string baseCurrency, string targetCurrency, double amount)
         {
-            var options = GetOptions();
-
-            string url = $"" +
-                $"{options.BaseUrl}/" +
-                $"{options.Key}" +
-                $"/pair/" +
+            string url = $"{_options.Key}/" +
+                "pair/" +
                 $"{baseCurrency}/" +
                 $"{targetCurrency}/" +
                 $"{amount}";
@@ -48,14 +47,10 @@ namespace Trading.Services
             }
         }
 
-        public async Task<FiatApiResponseDTO> RatesAsync(string baseCurrency)
+        public async Task<FiatApiResponseDTO> GatRatesAsync(string baseCurrency)
         {
-            var options = GetOptions();
-
-            string url = $"" +
-                $"{options.BaseUrl}/" +
-                $"{options.Key}" +
-                $"/latest/" +
+            string url = $"{_options.Key}" +
+                "/latest/" +
                 $"{baseCurrency}";
 
             using (HttpResponseMessage response = await _httpClient.GetAsync(url))
@@ -72,14 +67,5 @@ namespace Trading.Services
                 }
             }
         }
-
-        private FiatApiOptions GetOptions() 
-        {
-            var options = new FiatApiOptions();
-            _configuration.GetSection(FiatApiOptions.FiatApi).Bind(options);
-
-            return options;
-        }
-
     }
 }
