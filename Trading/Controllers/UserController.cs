@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Trading.Commands.UserCommands;
 using Trading.Queries.UserQueries;
+using Trading.Utils;
 
 namespace Trading.Controllers
 {
@@ -26,6 +28,7 @@ namespace Trading.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            UserUtils.EncryptPassword("kek");
             var res = await _mediator.Send(new GetUsersQuery());
 
             if (res == null)
@@ -63,11 +66,13 @@ namespace Trading.Controllers
         }
 
         [HttpPost]
+        [Route("create")]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
-            await _mediator.Send(command);
+            var res = await _mediator.Send(command);
+            var code = res ? StatusCodes.Status201Created : StatusCodes.Status400BadRequest;
 
-            return NoContent();
+            return StatusCode(code);
         }
 
         [HttpPatch]
@@ -83,6 +88,7 @@ namespace Trading.Controllers
             return Ok(res);
         }
 
+        [HttpPost]
         public async Task<IActionResult> AddPersonalData([FromBody] AddPersonalDataCommand command) 
         {
             var res = await _mediator.Send(command);

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trading.Commands.AccountCommands;
+using Trading.Data.Models;
 using Trading.Queries.AccountQueries;
 
 namespace Trading.Controllers
@@ -23,7 +25,7 @@ namespace Trading.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
+        
         public async Task<IActionResult> Get()
         {
             var res = await _mediator.Send(new GetAccountsQuery());
@@ -50,11 +52,13 @@ namespace Trading.Controllers
         }
 
         [HttpPost]
+        [Route("create")]
         public async Task<IActionResult> Create([FromBody] CreateAccountCommand command)
         {
-            await _mediator.Send(command);
+            var res = await _mediator.Send(command);
+            var code = res ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
 
-            return NoContent();
+            return StatusCode(code);
         }
 
         [HttpDelete("{id}")]

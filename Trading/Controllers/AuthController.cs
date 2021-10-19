@@ -23,7 +23,8 @@ namespace Trading.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("/token")]
+        [HttpPost]
+        [Route("token")]
         public async Task<IActionResult> Token([FromBody]GetTokenCommand command)
         {
             var response = await _mediator.Send(command);

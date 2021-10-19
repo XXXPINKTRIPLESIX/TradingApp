@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -64,11 +65,13 @@ namespace Trading.Controllers
         }
 
         [HttpPost]
+        [Route("create")]
         public async Task<IActionResult> Create([FromBody] CreateCurrencyCommand createCommand)
         {
-            await _mediator.Send(createCommand);
+            var res = await _mediator.Send(createCommand);
+            var code = res ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
 
-            return NoContent();
+            return StatusCode(code);
         }
 
         [HttpPost]

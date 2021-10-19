@@ -15,7 +15,7 @@ namespace Trading.Data.Models
         public Currency Currency { get; set; }
         public double Amount { get; set; }
 
-        public Account(int  userId, int currencyId)
+        public Account(int userId, int currencyId)
         {
             UserId = userId;
             CurrencyId = currencyId;
