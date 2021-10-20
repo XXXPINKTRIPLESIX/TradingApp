@@ -9,19 +9,16 @@ namespace Trading.Data.Models
 {
     public class Account
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int CurrencyId { get; set; }
+        public int UserId { get; set; }
         public Currency Currency { get; set; }
         public double Amount { get; set; }
 
-        public Account(int  id, int currencyId, Currency currency, double amount)
+        public Account(int userId, int currencyId)
         {
-            Id = id;
+            UserId = userId;
             CurrencyId = currencyId;
-            Currency = currency;
-            Amount = amount;
         }
 
         private Account() { }

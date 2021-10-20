@@ -1,3 +1,15 @@
+using Trading.Data;
+using Trading.Data.Models;
+using Trading.Interfaces;
+using Trading.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,17 +21,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Trading.Data;
-using Trading.Data.Models;
-using Trading.Data.Repository;
-using Trading.Interfaces.Database;
-using Trading.Interfaces.Services;
-using Trading.Services;
+using Trading.Middlewares;
+using System.Net.Http.Headers;
+using Trading.OptionBinders;
 
 namespace Trading
 {
@@ -39,17 +43,30 @@ namespace Trading
             options.UseSqlServer(
                 Configuration.GetConnectionString("ConnectionString")));
 
-            //Repositories
-            services.AddTransient<IRepository<Account, int>, AccountRepository>();
-            services.AddTransient<IRepository<User, int>, UserRepository>();
-            services.AddTransient<IRepository<Currency, int>, CurrencyRepository>();
-            services.AddTransient<IRepository<Account, int>, AccountRepository>();
-
             //Services
-            services.AddTransient<ICurrencyService, FiatCurrencyService>();
-           // services.AddTransient<ICurrencyService<CryproRateDTO>, CryptoCurrencyService>();
+            services.AddTransient<IFiatService, FiatCurrencyService>();
+            services.AddTransient<ICryptoService, CryptoCurrencyService>();
+            services.AddTransient<IAuthService, AuthService>();
 
             services.AddHttpClient();
+
+            //FiatApiOptions fiatOptions = Configuration.GetSection(FiatApiOptions.FiatApi).Get<FiatApiOptions>();
+
+            //services.AddHttpClient<IFiatService, FiatCurrencyService>(client => 
+            //{
+            //    client.BaseAddress = new Uri(fiatOptions.BaseUrl);
+            //});
+
+            //CryptoApiOptions cryptoOptions = Configuration.GetSection(CryptoApiOptions.CryptoApi).Get<CryptoApiOptions>();
+
+            //services.AddHttpClient<ICryptoService, CryptoCurrencyService>(client =>
+            //{
+            //    client.BaseAddress = new Uri(cryptoOptions.BaseUrl);
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(cryptoOptions.Header, cryptoOptions.Key);
+            //});
+
+            //MediatR
+            services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.GetExecutingAssembly());
 
             //JWT Auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -62,15 +79,15 @@ namespace Trading
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
 
-            services.AddControllers().ConfigureApiBehaviorOptions(options => 
-            {
-                options.SuppressInferBindingSourcesForParameters = true;
-            });
+            services.AddSwaggerGen();
+
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,15 +97,21 @@ namespace Trading
             {
                 app.UseDeveloperExceptionPage();
             }
+            //Custom Exception Handler
+            app.UseExceptionHandlerMiddleware();
 
             app.UseHttpsRedirection();
-
-            app.UseRouting();
 
             app.UseAuthentication();
 
             //app.UseAuthorization();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V2");
+            });
+
+            app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

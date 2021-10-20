@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using MediatR;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Trading.Data.Models;
-using Trading.DTO.Request;
-using Trading.Interfaces.Database;
-using Trading.Interfaces.Services;
+using Trading.Commands.CurrencyCommands;
+using Trading.Queries.CurrencyQueries;
 
 namespace Trading.Controllers
 {
@@ -17,108 +17,117 @@ namespace Trading.Controllers
     public class CurrencyController : ControllerBase
     {
         private readonly ILogger<CurrencyController> _logger;
-        private readonly ICurrencyService _currencyService;
-        private readonly IRepository<Currency, int> _currencyRepository;
+        private readonly IMediator _mediator;
 
-        public CurrencyController(ILogger<CurrencyController> logger, ICurrencyService currencyService, IRepository<Currency, int> currencyRepository)
+        public CurrencyController(ILogger<CurrencyController> logger, IMediator mediator)
         {
             _logger = logger;
-            _currencyService = currencyService;
-            _currencyRepository = currencyRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var currencies = await _currencyRepository.GetAsync();
+            var res = await _mediator.Send(new GetCurrenciesQuery());
 
-            if (currencies == null)
+            if (res == null)
+            {
                 return NotFound();
+            }
 
-            return Ok(currencies);
+            return Ok(res);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id)
+        public async Task<IActionResult> Get([FromRoute] GetCurrencyQuery query)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var res = await _currencyRepository.GetAsync(id);
+            var res = await _mediator.Send(query);
 
             if (res == null)
+            {
                 return NotFound();
+            }
 
             return Ok(res);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] DeleteCurrencyCommand command)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var res = await _currencyRepository.DeleteAsync(id);
+            var res = await _mediator.Send(command);
 
             if (res == null)
+            {
                 return NotFound();
+            }
 
             return Ok(res);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Currency currency)
+        [Route("create")]
+        public async Task<IActionResult> Create([FromBody] CreateCurrencyCommand createCommand)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var res = await _mediator.Send(createCommand);
+            var code = res ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
 
-            await _currencyRepository.AddAsync(currency);
-
-            return NoContent();
-        }
-
-        [HttpPatch]
-        public async Task<IActionResult> Update([FromBody] Currency currency)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var res = await _currencyRepository.UpdateAsync(currency);
-
-            if (res == null)
-                return NotFound();
-
-            return Ok(res);
+            return StatusCode(code);
         }
 
         [HttpPost]
-        [Route("Exchange")]
-        public async Task<IActionResult> Exchange([FromBody] FiatRequestExchangeDTO exchangeDTO)
+        [Route("fiat/exchange")]
+        public async Task<IActionResult> FiatExchange([FromBody] ExchangeFiatCurrencyCommand command)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var res = await _currencyService.Exchange(exchangeDTO.BaseCurrency, exchangeDTO.TargetCurrency, exchangeDTO.Amount);
+            var res = await _mediator.Send(command);
 
             if (res.SuccessResponse == null)
-                return BadRequest(res.ErrorResponse); 
-                                                           
-            return Ok(res.SuccessResponse);                
-        }
-
-        [HttpPost]
-        [Route("Rate")]
-        public async Task<IActionResult> CurrencyRate([FromQuery] string baseCurrency)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var res = await _currencyService.Rates(baseCurrency);
-
-            if (res.SuccessResponse == null)
+            {
                 return BadRequest(res.ErrorResponse);
+            }
 
             return Ok(res.SuccessResponse);
+        }
+
+        [HttpGet]
+        [Route("fiat/rates")]
+        public async Task<IActionResult> FiatCurrencyRates([FromQuery] GetRatesFiatCurrencyQuery query)
+        {
+            var res = await _mediator.Send(query);
+
+            if (res.SuccessResponse == null)
+            {
+                return BadRequest(res.ErrorResponse);
+            }
+
+            return Ok(res.SuccessResponse);
+        }
+
+        [HttpPost]
+        [Route("crypto/exchange")]
+        public async Task<IActionResult> CryptoExchange([FromBody] ExchangeCryptoCurrencyCommand command)
+        {
+            var res = await _mediator.Send(command);
+
+            if (res == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(res);
+        }
+
+        [HttpGet]
+        [Route("crypto/rates")]
+        public async Task<IActionResult> CryptoCurrencyRates([FromQuery] GetRatesCryptoCurrencyQuery query)
+        {
+            var res = await _mediator.Send(query);
+
+            if (res == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(res);
         }
     }
 }

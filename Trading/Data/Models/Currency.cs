@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 
 namespace Trading.Data.Models
 {
-    public class Currency{
-       [Key]
-       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public class Currency
+    {
         public int Id { get; set; }
         public string CurrencyCode { get; set; }
+        public List<Account> Accounts { get; set; }
         public CurrencyType Type { get; set; }
 
+        public Currency(string currencyCode, CurrencyType type)
+        {
+            CurrencyCode = currencyCode;
+            Type = type;
+        }
         public Currency(int id, string currencyCode, CurrencyType type)
         {
             Id = id;
