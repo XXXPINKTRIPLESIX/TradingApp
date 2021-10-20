@@ -28,7 +28,6 @@ namespace Trading.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            UserUtils.EncryptPassword("kek");
             var res = await _mediator.Send(new GetUsersQuery());
 
             if (res == null)
@@ -95,10 +94,16 @@ namespace Trading.Controllers
 
             if(res == null) 
             {
-                return NotFound();
+                return BadRequest();
             }
 
             return Ok(res);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePersonalData([FromBody] UpdateUserCommand command)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -24,25 +24,10 @@ namespace Trading.Data
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            builder.Entity<User>().HasData(DefaultDataProvider.GetUsers());
+            builder.Entity<Currency>().HasData(DefaultDataProvider.GetCurrencies());
+
             base.OnModelCreating(builder);
-
-            //builder.Entity<Account>().HasOne(u => u.s).WithOne()
-
-            builder.Entity<User>().HasData(new User(1, "111", "111", "111@gmail.com", "admin"));
-            builder.Entity<User>().HasData(new User(2, "222", "222", "222@gmail.com", "user"));
-            builder.Entity<User>().HasData(new User(3, "333", "333", "333@gmail.com", "user"));
-            builder.Entity<User>().HasData(new User(4, "444", "444", "444@gmail.com", "user"));
-            builder.Entity<User>().HasData(new User(5, "555", "555", "555@gmail.com", "user"));
-            builder.Entity<User>().HasData(new User(6, "666", "666", "666@gmail.com", "user"));
-
-            builder.Entity<Currency>().HasData(new Currency(1, "USD", CurrencyType.Fiat));
-            builder.Entity<Currency>().HasData(new Currency(2, "EUR", CurrencyType.Fiat));
-            builder.Entity<Currency>().HasData(new Currency(3, "UAH", CurrencyType.Fiat));
-            builder.Entity<Currency>().HasData(new Currency(4, "RUB", CurrencyType.Fiat));
-
-            builder.Entity<Currency>().HasData(new Currency(5, "BTC", CurrencyType.Crypto));
-            builder.Entity<Currency>().HasData(new Currency(6, "ETH", CurrencyType.Crypto));
-            builder.Entity<Currency>().HasData(new Currency(7, "CryproName", CurrencyType.Crypto));
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Trading.Commands.UserCommands;
 using Trading.Data;
 using Trading.Data.Models;
+using Trading.Utils;
 
 namespace Trading.Commands.Handlers
 {
@@ -27,7 +28,9 @@ namespace Trading.Commands.Handlers
 
         public async Task<bool> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            User user = new User(request.Login, request.Password, request.Email, request.Role);
+            string encryptedPassword = UserUtils.EncryptPassword(request.Password);
+
+            User user = new User(request.Login, encryptedPassword, request.Email, request.Role);
 
             await _context.Users.AddAsync(user, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
@@ -64,7 +67,6 @@ namespace Trading.Commands.Handlers
             }
                 
             _context.Users.Remove(user);
-
             await _context.SaveChangesAsync(cancellationToken);
 
             return user;
@@ -80,7 +82,6 @@ namespace Trading.Commands.Handlers
             }
 
             user.PersonalData = new PersonalData(request.Name, request.LastName, request.Surname, request.PhoneNumber, request.Description);
-
             await _context.SaveChangesAsync(cancellationToken);
 
             return user;

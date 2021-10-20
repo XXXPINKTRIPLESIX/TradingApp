@@ -28,10 +28,14 @@ namespace Trading.Services
 
         public async Task<object> GetTokenAsync(string login, string password)
         {
-            var identity = await GetIdentityAsync(login, password);
+            string encryptedPassword = Utils.UserUtils.EncryptPassword(password);
+
+            var identity = await GetIdentityAsync(login, encryptedPassword);
 
             if (identity == null)
+            {
                 return null;
+            }
 
             var date = DateTime.UtcNow;
 

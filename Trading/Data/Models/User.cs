@@ -34,6 +34,17 @@ namespace Trading.Data.Models
             Role = role;
         }
 
+        public User(int id, string login, string password, string email, string role, PersonalData personalData, List<Account> accounts)
+        {
+            Id = id;
+            Login = login;
+            Password = password;
+            Email = email;
+            Role = role;
+            PersonalData = personalData;
+            Accounts = accounts;
+        }
+
         private User() { }
     }
 }
