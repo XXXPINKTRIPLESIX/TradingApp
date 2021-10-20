@@ -101,6 +101,7 @@ namespace Trading.Controllers
         }
 
         [HttpPost]
+        [Route("update")]
         public async Task<IActionResult> UpdatePersonalData([FromBody] UpdateUserCommand command)
         {
             throw new NotImplementedException();

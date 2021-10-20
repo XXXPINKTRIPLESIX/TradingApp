@@ -84,6 +84,8 @@ namespace Trading
                     };
                 });
 
+            services.AddSwaggerGen();
+
             services.AddControllers()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
         }
@@ -100,12 +102,16 @@ namespace Trading
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
-
             app.UseAuthentication();
 
             //app.UseAuthorization();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V2");
+            });
+
+            app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -25,7 +25,7 @@ namespace Trading.Controllers
             _mediator = mediator;
         }
 
-        
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var res = await _mediator.Send(new GetAccountsQuery());
