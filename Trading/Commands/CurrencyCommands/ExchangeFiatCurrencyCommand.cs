@@ -9,8 +9,8 @@ namespace Trading.Commands.CurrencyCommands
 {
     public class ExchangeFiatCurrencyCommand : IRequest<FiatApiResponseDTO>
     {
-        public string BaseCurrency { get; set; }
-        public string TargetCurrency { get; set; }
+        public int AccountId { get; set; }
+        public int TargetAccountId { get; set; }
         public double Amount { get; set; }
     }
 }

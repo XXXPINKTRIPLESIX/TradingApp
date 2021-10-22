@@ -46,5 +46,18 @@ namespace Trading.Data.Models
         }
 
         private User() { }
+
+        public double AddToAccount(string currency, double amount) 
+        {
+            foreach(var account in Accounts) 
+            {
+                account.Currency.Type
+            }
+        }
+
+        public double SubtractFromAccount(string currency, double amount) 
+        {
+            throw new NotImplementedException();
+        }
     }
 }

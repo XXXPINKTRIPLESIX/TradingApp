@@ -26,7 +26,7 @@ namespace Trading.Services
             _httpClient.DefaultRequestHeaders.Add(_options.Header, _options.Key);
         }
 
-        public async Task<CryptoResponseExchangeDTO> Exchange(string baseCurrencyCode, string targetCurrency, double amount)
+        public async Task<CryptoApiResponseDTO> ExchangeAsync(string baseCurrencyCode, string targetCurrency, double amount)
         {
             string url = $"exchangerate/" +
                 $"{baseCurrencyCode}/" +
@@ -40,16 +40,16 @@ namespace Trading.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<CryptoResponseExchangeDTO>();
+                    return new CryptoApiResponseDTO() { SuccessResponse = await response.Content.ReadAsAsync<CryptoResponseExchangeDTO>(), ErrorResponse = null };
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    return new CryptoApiResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<CryptoResponseErrorDTO>() };
                 }
             }
         }
 
-        public async Task<List<CryptoResponseRatesDTO>> GetRates(string baseCurrencyCode)
+        public async Task<List<CryptoResponseRatesDTO>> GetRatesAsync(string baseCurrencyCode)
         {
             string url = $"exchangerate/" +
                 $"{baseCurrencyCode}/" +

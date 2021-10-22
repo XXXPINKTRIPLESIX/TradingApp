@@ -7,5 +7,7 @@ namespace Trading.DTO.Crypro
 {
     public class CryptoApiResponseDTO
     {
+        public CryptoResponseExchangeDTO SuccessResponse { get; set; }
+        public CryptoResponseErrorDTO ErrorResponse { get; set; }
     }
 }
