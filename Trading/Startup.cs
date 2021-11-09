@@ -41,7 +41,8 @@ namespace Trading
         {
             services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlServer(
-                Configuration.GetConnectionString("ConnectionString")));
+                    Configuration.GetConnectionString("ConnectionString")
+                ));
 
             //Services
             services.AddTransient<IFiatService, FiatCurrencyService>();
@@ -107,7 +108,8 @@ namespace Trading
             //app.UseAuthorization();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V2");
             });
 

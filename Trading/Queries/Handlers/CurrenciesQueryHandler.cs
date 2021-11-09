@@ -49,7 +49,7 @@ namespace Trading.Queries.Handlers
 
         public async Task<List<CryptoResponseRatesDTO>> Handle(GetRatesCryptoCurrencyQuery request, CancellationToken cancellationToken)
         {
-            return await _cryptoService.GetRates(request.BaseCurrency);
+            return await _cryptoService.GetRatesAsync(request.BaseCurrency);
         }
     }
 }

@@ -19,12 +19,14 @@ namespace Trading.Data.Models
             CurrencyCode = currencyCode;
             Type = type;
         }
+
         public Currency(int id, string currencyCode, CurrencyType type)
         {
             Id = id;
             CurrencyCode = currencyCode;
             Type = type;
         }
+
         private Currency() { }
     }
 }
