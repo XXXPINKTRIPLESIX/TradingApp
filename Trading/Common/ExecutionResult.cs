@@ -7,20 +7,26 @@ namespace Trading.Common
 {
     public class ExecutionResult<T>
     {
-        public bool IsSuccess { get; set; }
-        public T Result { get; private set; }
-        public string Error { get; private set; }
+        public bool IsSuccess { get; protected set; }
+        public T Result { get; protected set; }
+        public string Error { get; protected set; }
 
-        public void CreateSuccessResult(T obj) 
+        public static ExecutionResult<T> CreateSuccessResult(T obj)
         {
-            Result = obj;
-            IsSuccess = true;
+            return new ExecutionResult<T>
+            {
+                Result = obj,
+                IsSuccess = true
+            };
         }
 
-        public void CreateErrorResult(string error)
+        public static ExecutionResult<T> CreateErrorResult(string error)
         {
-            Error = error;
-            IsSuccess = false;
+            return new ExecutionResult<T>
+            {
+                Error = error,
+                IsSuccess = false
+            };
         }
     }
 }

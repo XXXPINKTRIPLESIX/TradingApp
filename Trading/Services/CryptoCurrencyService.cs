@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Trading.Common;
 using Trading.DTO.Crypro;
 using Trading.Interfaces;
 using Trading.OptionBinders;
@@ -26,7 +27,7 @@ namespace Trading.Services
             _httpClient.DefaultRequestHeaders.Add(_options.Header, _options.Key);
         }
 
-        public async Task<CryptoApiResponseDTO> ExchangeAsync(string baseCurrencyCode, string targetCurrency, double amount)
+        public async Task<ExecutionResult<T>> ExchangeAsync<T>(string baseCurrencyCode, string targetCurrency, double amount)
         {
             string url = $"exchangerate/" +
                 $"{baseCurrencyCode}/" +
@@ -34,39 +35,35 @@ namespace Trading.Services
 
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, url))
             {
-                //requestMessage.Headers.Authorization = new AuthenticationHeaderValue(_options.Header, _options.Key);
-
                 var response = await _httpClient.SendAsync(requestMessage);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return new CryptoApiResponseDTO() { SuccessResponse = await response.Content.ReadAsAsync<CryptoResponseExchangeDTO>(), ErrorResponse = null };
+                    return ExecutionResult<T>.CreateSuccessResult(await response.Content.ReadAsAsync<T>());
                 }
                 else
                 {
-                    return new CryptoApiResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<CryptoResponseErrorDTO>() };
+                    return ExecutionResult<T>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
                 }
             }
         }
 
-        public async Task<List<CryptoResponseRatesDTO>> GetRatesAsync(string baseCurrencyCode)
+        public async Task<ExecutionResult<List<T>>> GetRatesAsync<T>(string baseCurrencyCode)
         {
             string url = $"exchangerate/" +
                 $"{baseCurrencyCode}/" +
                 "?invert=false";
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, url))
             {
-                //requestMessage.Headers.Authorization = new AuthenticationHeaderValue(_options.Header, _options.Key);
-
                 var response = await _httpClient.SendAsync(requestMessage);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<List<CryptoResponseRatesDTO>>();
+                    return ExecutionResult<List<T>>.CreateSuccessResult(await response.Content.ReadAsAsync<List<T>>());
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    return ExecutionResult<List<T>>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
                 }
             }
         }
