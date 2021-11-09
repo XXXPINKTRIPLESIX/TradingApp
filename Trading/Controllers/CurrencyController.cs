@@ -41,7 +41,7 @@ namespace Trading.Controllers
             return StatusCode(code, res);
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(Currency), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get([FromRoute] GetCurrencyQuery query)

@@ -37,7 +37,7 @@ namespace Trading.Controllers
             return StatusCode(code, res);
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(Account), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get([FromRoute] GetAccountQuery query)
