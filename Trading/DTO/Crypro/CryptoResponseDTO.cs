@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Trading.DTO.Crypro
 {
-    public class CryptoResponseExchangeDTO
+    public class CryptoResponseDTO
     {
         [JsonProperty("time")]
         public DateTime Time { get; set; }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Trading.Common;
 using Trading.Data;
 using Trading.Data.Models;
 using Trading.DTO.Crypro;
@@ -18,8 +19,8 @@ namespace Trading.Queries.Handlers
     public class CurrenciesQueryHandler :
         IRequestHandler<GetCurrencyQuery, Currency>,
         IRequestHandler<GetCurrenciesQuery, List<Currency>>,
-        IRequestHandler<GetRatesFiatCurrencyQuery, FiatApiResponseDTO>,
-        IRequestHandler<GetRatesCryptoCurrencyQuery, List<CryptoResponseRatesDTO>>
+        IRequestHandler<GetRatesFiatCurrencyQuery, ExecutionResult<FiatResponseDTO>>,
+        IRequestHandler<GetRatesCryptoCurrencyQuery, ExecutionResult<List<CryptoResponseDTO>>>
     {
         private readonly DatabaseContext _context;
         private readonly FiatCurrencyService _fiatService;
@@ -42,14 +43,14 @@ namespace Trading.Queries.Handlers
             return await _context.Currencies.ToListAsync(cancellationToken);
         }
 
-        public async Task<FiatApiResponseDTO> Handle(GetRatesFiatCurrencyQuery request, CancellationToken cancellationToken)
+        public async Task<ExecutionResult<FiatResponseDTO>> Handle(GetRatesFiatCurrencyQuery request, CancellationToken cancellationToken)
         {
-            return await _fiatService.GatRatesAsync(request.BaseCurrency);
+            return await _fiatService.GatRatesAsync<FiatResponseDTO>(request.BaseCurrency);
         }
 
-        public async Task<List<CryptoResponseRatesDTO>> Handle(GetRatesCryptoCurrencyQuery request, CancellationToken cancellationToken)
+        public async Task<ExecutionResult<List<CryptoResponseDTO>>> Handle(GetRatesCryptoCurrencyQuery request, CancellationToken cancellationToken)
         {
-            return await _cryptoService.GetRatesAsync(request.BaseCurrency);
+            return await _cryptoService.GetRatesAsync<CryptoResponseDTO>(request.BaseCurrency);
         }
     }
 }

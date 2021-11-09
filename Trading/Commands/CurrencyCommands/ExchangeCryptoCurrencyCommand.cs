@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trading.Common;
 using Trading.DTO.Crypro;
 
 namespace Trading.Commands.CurrencyCommands
 {
-    public class ExchangeCryptoCurrencyCommand : IRequest<CryptoApiResponseDTO>
+    public class ExchangeCryptoCurrencyCommand : IRequest<ExecutionResult<CryptoResponseDTO>>
     {
         public int AccountId { get; set; }
         public int TargetAccountId { get; set; }

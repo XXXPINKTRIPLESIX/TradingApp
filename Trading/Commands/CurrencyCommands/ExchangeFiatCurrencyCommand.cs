@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Trading.Common;
 using Trading.DTO.Fiat;
 
 namespace Trading.Commands.CurrencyCommands
 {
-    public class ExchangeFiatCurrencyCommand : IRequest<FiatApiResponseDTO>
+    public class ExchangeFiatCurrencyCommand : IRequest<ExecutionResult<FiatResponseDTO>>
     {
         public int AccountId { get; set; }
         public int TargetAccountId { get; set; }
