@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Trading.Utils
 {
-    public static class UserUtils
+    public static class PasswordEncryption
     {
         public static string EncryptPassword(string password)
         {

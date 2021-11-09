@@ -105,12 +105,10 @@ namespace Trading
 
             app.UseAuthentication();
 
-            //app.UseAuthorization();
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V2");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
             app.UseRouting();

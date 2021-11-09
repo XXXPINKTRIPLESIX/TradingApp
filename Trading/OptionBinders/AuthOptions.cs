@@ -8,6 +8,7 @@ namespace Trading.OptionBinders
     public class AuthOptions
     {
         public static string JWT = "JWT";
+        
         public string Key { get; set; }
         public string Issuer { get; set; }
         public string Audience { get; set; }

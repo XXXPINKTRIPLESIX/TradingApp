@@ -28,7 +28,7 @@ namespace Trading.Services
 
         public async Task<object> GetTokenAsync(string login, string password)
         {
-            string passwordHash = Utils.UserUtils.EncryptPassword(password);
+            string passwordHash = Utils.PasswordEncryption.EncryptPassword(password);
 
             var identity = await GetIdentityAsync(login, passwordHash);
 

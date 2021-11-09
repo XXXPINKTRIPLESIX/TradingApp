@@ -28,7 +28,7 @@ namespace Trading.Commands.Handlers
 
         public async Task<bool> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            string passwordHash = UserUtils.EncryptPassword(request.Password);
+            string passwordHash = PasswordEncryption.EncryptPassword(request.Password);
 
             User user = new User(request.Login, passwordHash, request.Email, request.Role);
 

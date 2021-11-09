@@ -16,10 +16,10 @@ namespace Trading.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
+        private readonly ILogger<AccountController> _logger;
         private readonly IMediator _mediator;
 
-        public AccountController(ILogger<UserController> logger, IMediator mediator)
+        public AccountController(ILogger<AccountController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
