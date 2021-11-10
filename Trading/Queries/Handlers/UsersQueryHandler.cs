@@ -11,8 +11,8 @@ using Trading.Queries.UserQueries;
 
 namespace Trading.Queries.Handlers
 {
-    public class UsersQueryHandler : 
-        IRequestHandler<GetUserQuery, User>, 
+    public class UsersQueryHandler :
+        IRequestHandler<GetUserQuery, User>,
         IRequestHandler<GetUsersQuery, List<User>>
     {
         private readonly DatabaseContext _context;

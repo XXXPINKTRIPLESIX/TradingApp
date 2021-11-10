@@ -11,8 +11,8 @@ namespace Trading.Validators
     {
         public ExchangeCryptoCurrencyCommandValidator()
         {
-            RuleFor(cc => cc.BaseCurrency).NotEmpty().WithMessage("BaseCurrency is empty.");
-            RuleFor(cc => cc.TargetCurrency).NotEmpty().WithMessage("TargetCurrency is empty.");
+            RuleFor(cc => cc.AccountId).NotNull().WithMessage("AccountId is null.");
+            RuleFor(cc => cc.TargetAccountId).NotNull().WithMessage("TargetAccountId is null.");
             RuleFor(cc => cc.Amount).GreaterThan(0).WithMessage("Amount is less or equal than 0.");
         }
     }

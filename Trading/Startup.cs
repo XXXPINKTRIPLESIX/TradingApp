@@ -41,7 +41,8 @@ namespace Trading
         {
             services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlServer(
-                Configuration.GetConnectionString("ConnectionString")));
+                    Configuration.GetConnectionString("ConnectionString")
+                ));
 
             //Services
             services.AddTransient<IFiatService, FiatCurrencyService>();
@@ -97,18 +98,17 @@ namespace Trading
             {
                 app.UseDeveloperExceptionPage();
             }
-            //Custom Exception Handler
-            app.UseExceptionHandlerMiddleware();
+            
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
 
-            //app.UseAuthorization();
-
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V2");
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
             app.UseRouting();

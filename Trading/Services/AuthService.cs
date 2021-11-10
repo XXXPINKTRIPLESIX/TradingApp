@@ -28,9 +28,9 @@ namespace Trading.Services
 
         public async Task<object> GetTokenAsync(string login, string password)
         {
-            string encryptedPassword = Utils.UserUtils.EncryptPassword(password);
+            string passwordHash = Utils.PasswordEncryption.EncryptPassword(password);
 
-            var identity = await GetIdentityAsync(login, encryptedPassword);
+            var identity = await GetIdentityAsync(login, passwordHash);
 
             if (identity == null)
             {
@@ -57,9 +57,9 @@ namespace Trading.Services
             };
         }
 
-        private async Task<ClaimsIdentity> GetIdentityAsync(string login, string password)
+        private async Task<ClaimsIdentity> GetIdentityAsync(string login, string passwordHash)
         {
-            var user = await _databaseContext.Users.FirstOrDefaultAsync(u => u.Login == login && u.Password == password); 
+            var user = await _databaseContext.Users.FirstOrDefaultAsync(u => u.Login == login && u.Password == passwordHash); 
 
             if (user != null)
             {

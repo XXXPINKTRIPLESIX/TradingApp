@@ -7,6 +7,9 @@ namespace Trading.Exceptions
 {
     public class TradingApiBaseException : Exception
     {
-        public TradingApiBaseException(string message) : base(message) { }
+        public TradingApiBaseException(string message) : base(message)
+        {
+            
+        }
     }
 }

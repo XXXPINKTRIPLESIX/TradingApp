@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Trading.Commands.AuthCommands;
 
 namespace Trading.Controllers
@@ -25,16 +26,15 @@ namespace Trading.Controllers
 
         [HttpPost]
         [Route("token")]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Token([FromBody]GetTokenCommand command)
         {
             var response = await _mediator.Send(command);
 
-            if (response == null)
-            {
-                return BadRequest();
-            }
+            var code = response != null ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
 
-            return Ok(response);
+            return StatusCode(code);
         }
     }
 }

@@ -9,6 +9,7 @@ using Trading.DTO.Fiat;
 using System.Text;
 using Trading.OptionBinders;
 using System.Net.Http.Headers;
+using Trading.Common;
 
 namespace Trading.Services
 {
@@ -26,45 +27,35 @@ namespace Trading.Services
             _httpClient.BaseAddress = new Uri(_options.BaseUrl);
         }
 
-        public async Task<FiatApiResponseDTO> ExchangeAsync(string baseCurrency, string targetCurrency, double amount)
+        public async Task<ExecutionResult<T>> ExchangeAsync<T>(string baseCurrency, string targetCurrency, double amount)
         {
-            string url = $"{_options.Key}/" +
+            var url = $"{_options.Key}/" +
                 "pair/" +
                 $"{baseCurrency}/" +
                 $"{targetCurrency}/" +
                 $"{amount}";
 
-            using (HttpResponseMessage response = await _httpClient.GetAsync(url))
-            {
-                if (response.IsSuccessStatusCode)
-                {
-                    return new FiatApiResponseDTO() { SuccessResponse = await response.Content.ReadAsAsync<FiatResponseDTO>(), ErrorResponse = null };
-                }
-                else
-                {
-                    return new FiatApiResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<FiatResponseErrorDto>() };
-                }
-            }
+            using var response = await _httpClient.GetAsync(url);
+            return response.IsSuccessStatusCode ? ExecutionResult<T>.CreateSuccessResult(await response.Content.ReadAsAsync<T>()) : ExecutionResult<T>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
         }
 
-        public async Task<FiatApiResponseDTO> GatRatesAsync(string baseCurrency)
+        public async Task<ExecutionResult<T>> GatRatesAsync<T>(string baseCurrency) where T : FiatResponseDTO
         {
-            string url = $"{_options.Key}" +
+            var url = $"{_options.Key}" +
                 "/latest/" +
                 $"{baseCurrency}";
 
-            using (HttpResponseMessage response = await _httpClient.GetAsync(url))
+            using var response = await _httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var res = await response.Content.ReadAsAsync<FiatResponseDTO>();
-                    res.ConversionRates.Remove(baseCurrency);
-                    return new FiatApiResponseDTO() { SuccessResponse = res, ErrorResponse = null };
-                }
-                else
-                {
-                    return new FiatApiResponseDTO() { SuccessResponse = null, ErrorResponse = await response.Content.ReadAsAsync<FiatResponseErrorDto>() };
-                }
+                var res = await response.Content.ReadAsAsync<T>();
+                res.ConversionRates.Remove(baseCurrency);
+                
+                return ExecutionResult<T>.CreateSuccessResult((T)res);
+            }
+            else
+            {
+                return ExecutionResult<T>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
             }
         }
     }

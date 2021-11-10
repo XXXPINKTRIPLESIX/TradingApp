@@ -16,62 +16,62 @@ namespace Trading.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
+        private readonly ILogger<AccountController> _logger;
         private readonly IMediator _mediator;
 
-        public AccountController(ILogger<UserController> logger, IMediator mediator)
+        public AccountController(ILogger<AccountController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<Account>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get()
         {
             var res = await _mediator.Send(new GetAccountsQuery());
-
-            if (res == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(res);
+            
+            var code = res != null ? StatusCodes.Status200OK : StatusCodes.Status404NotFound;
+            
+            return StatusCode(code, res);
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Account), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get([FromRoute] GetAccountQuery query)
         {
             var res = await _mediator.Send(query);
-
-            if (res == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(res);
+            
+            var code = res != null ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
+            
+            return StatusCode(code, res);
         }
 
         [HttpPost]
         [Route("create")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateAccountCommand command)
         {
             var res = await _mediator.Send(command);
+            
             var code = res ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
 
-            return StatusCode(code);
+            return StatusCode(code, res);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [ProducesResponseType(typeof(Account), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete([FromRoute] DeleteAccountCommand command)
         {
             var res = await _mediator.Send(command);
+            
+            var code = res != null ? StatusCodes.Status200OK : StatusCodes.Status404NotFound;
 
-            if (res == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(res);
+            return StatusCode(code, res);
         }
     }
 }
