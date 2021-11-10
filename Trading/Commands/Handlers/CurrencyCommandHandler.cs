@@ -19,8 +19,8 @@ namespace Trading.Commands.Handlers
     public class CurrencyCommandHandler :
         IRequestHandler<CreateCurrencyCommand, bool>,
         IRequestHandler<DeleteCurrencyCommand, Currency>,
-        IRequestHandler<ExchangeFiatCurrencyCommand, ExecutionResult<FiatResponseDTO>>,
-        IRequestHandler<ExchangeCryptoCurrencyCommand, ExecutionResult<CryptoResponseDTO>>
+        IRequestHandler<ExchangeFiatCurrencyCommand, ExecutionResult<Account>>,
+        IRequestHandler<ExchangeCryptoCurrencyCommand, ExecutionResult<Account>>
     {
         private readonly DatabaseContext _context;
         private readonly FiatCurrencyService _fiatService;
@@ -58,72 +58,72 @@ namespace Trading.Commands.Handlers
             return currency;
         }
 
-        public async Task<ExecutionResult<FiatResponseDTO>> Handle(ExchangeFiatCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<ExecutionResult<Account>> Handle(ExchangeFiatCurrencyCommand request, CancellationToken cancellationToken)
         {
-            Account account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.AccountId);
-            Account targetAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.TargetAccountId);
+            Account account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.AccountId, cancellationToken);
+            Account targetAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.TargetAccountId, cancellationToken);
 
-            if(account.UserId != targetAccount.UserId) 
+            if(account.UserId != targetAccount.UserId)
             {
-                throw new NotImplementedException();
+                return ExecutionResult<Account>.CreateErrorResult("Accounts belongs to different user.");
             }
 
-            if(account.Currency.Type != CurrencyType.Fiat &&  targetAccount.Currency.Type != CurrencyType.Fiat) 
+            if(account.Currency.Type != CurrencyType.Fiat &&  targetAccount.Currency.Type != CurrencyType.Fiat)
             {
-                throw new NotImplementedException();
+                return ExecutionResult<Account>.CreateErrorResult("Wrong currency type.");
             }
 
-            if(account.Amount < request.Amount) 
+            if(account.Amount < request.Amount)
             {
-                throw new NotImplementedException();
+                return ExecutionResult<Account>.CreateErrorResult("Not enough currency amount to convert.");
             }
-
-            account.Amount -= request.Amount;
 
             var result = await ExchangeFiat<FiatResponseDTO>(account.Currency.CurrencyCode, targetAccount.Currency.CurrencyCode, request.Amount);
 
-            if(result.Error == null) 
+            if(!result.IsSuccess)
             {
-                throw new NotImplementedException();
+                return ExecutionResult<Account>.CreateErrorResult($"{result.Error}");
             }
-
+            
+            account.Amount -= request.Amount;
             targetAccount.Amount += result.Result.ConversionResult;
+            await _context.SaveChangesAsync(cancellationToken);
 
-            throw new NotImplementedException(); 
+            return ExecutionResult<Account>.CreateSuccessResult(targetAccount); 
         }
 
-        public async Task<ExecutionResult<CryptoResponseDTO>> Handle(ExchangeCryptoCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<ExecutionResult<Account>> Handle(ExchangeCryptoCurrencyCommand request, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.AccountId);
-            var targetAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.TargetAccountId);
-
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.AccountId, cancellationToken);
+            var targetAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.TargetAccountId, cancellationToken);
+            
             if (account.UserId != targetAccount.UserId)
             {
-                throw new NotImplementedException();
+                return ExecutionResult<Account>.CreateErrorResult("Accounts belongs to different user.");
             }
-
-            //if (account.Currency.Type != CurrencyType.Fiat && targetAccount.Currency.Type != CurrencyType.Fiat)
-            //{
-            //    throw new NotImplementedException();
-            //}
-
+            
+            var currencies = await _context.Currencies.Where(c => c.Type == CurrencyType.Fiat).ToListAsync(cancellationToken);
+            //
+            //NEED TO CHECK FOR SUPPORTED CURRENCIES(FIAT (IF FIAT)) TO CONVERT TO CRYPTO!
+            //
+            
             if (account.Amount < request.Amount)
             {
-                return ExecutionResult<CryptoResponseDTO>.CreateErrorResult($"{account.Amount} less than {request.Amount}");
+                return ExecutionResult<Account>.CreateErrorResult("Not enough currency amount to convert.");
             }
 
             var response = await ExchangeCrypto<CryptoResponseDTO>(account.Currency.CurrencyCode, targetAccount.Currency.CurrencyCode, request.Amount);
 
-            account.Amount -= request.Amount;
-
-            if (response.IsSuccess == false)
+            if (!response.IsSuccess)
             {
-                return response;
+                return ExecutionResult<Account>.CreateErrorResult($"{response.Error}");
             }
-
+            
+            account.Amount -= request.Amount;
             targetAccount.Amount += response.Result.Rate;
-
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync(cancellationToken);
+            
+            return ExecutionResult<Account>.CreateSuccessResult(targetAccount);
         }
 
         private async Task<ExecutionResult<T>> ExchangeFiat<T>(string baseCurrency, string targetCurrency, double amount) 

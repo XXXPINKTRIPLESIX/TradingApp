@@ -7,9 +7,9 @@ namespace Trading.Common
 {
     public class ExecutionResult<T>
     {
-        public bool IsSuccess { get; protected set; }
-        public T Result { get; protected set; }
-        public string Error { get; protected set; }
+        public bool IsSuccess { get; private set; }
+        public T Result { get; private set; }
+        public string Error { get; private set; }
 
         public static ExecutionResult<T> CreateSuccessResult(T obj)
         {

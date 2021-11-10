@@ -98,8 +98,8 @@ namespace Trading
             {
                 app.UseDeveloperExceptionPage();
             }
-            //Custom Exception Handler
-            app.UseExceptionHandlerMiddleware();
+            
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 
