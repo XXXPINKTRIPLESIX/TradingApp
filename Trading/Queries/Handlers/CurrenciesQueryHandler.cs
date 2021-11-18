@@ -19,8 +19,8 @@ namespace Trading.Queries.Handlers
     public class CurrenciesQueryHandler :
         IRequestHandler<GetCurrencyQuery, Currency>,
         IRequestHandler<GetCurrenciesQuery, List<Currency>>,
-        IRequestHandler<GetRatesFiatCurrencyQuery, ExecutionResult<FiatResponseDTO>>,
-        IRequestHandler<GetRatesCryptoCurrencyQuery, ExecutionResult<List<CryptoResponseDTO>>>
+        IRequestHandler<GetRatesFiatCurrencyQuery, ExecutionResult>,
+        IRequestHandler<GetRatesCryptoCurrencyQuery, ExecutionResult>
     {
         private readonly DatabaseContext _context;
         private readonly FiatCurrencyService _fiatService;
@@ -43,12 +43,12 @@ namespace Trading.Queries.Handlers
             return await _context.Currencies.ToListAsync(cancellationToken);
         }
 
-        public async Task<ExecutionResult<FiatResponseDTO>> Handle(GetRatesFiatCurrencyQuery request, CancellationToken cancellationToken)
+        public async Task<ExecutionResult> Handle(GetRatesFiatCurrencyQuery request, CancellationToken cancellationToken)
         {
             return await _fiatService.GatRatesAsync<FiatResponseDTO>(request.BaseCurrency);
         }
 
-        public async Task<ExecutionResult<List<CryptoResponseDTO>>> Handle(GetRatesCryptoCurrencyQuery request, CancellationToken cancellationToken)
+        public async Task<ExecutionResult> Handle(GetRatesCryptoCurrencyQuery request, CancellationToken cancellationToken)
         {
             return await _cryptoService.GetRatesAsync<CryptoResponseDTO>(request.BaseCurrency);
         }

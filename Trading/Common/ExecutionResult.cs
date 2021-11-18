@@ -1,28 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Trading.Common
+﻿namespace Trading.Common
 {
-    public class ExecutionResult<T>
+    public class ExecutionResult
     {
-        public bool IsSuccess { get; private set; }
-        public T Result { get; private set; }
-        public string Error { get; private set; }
+        public bool IsSuccess { get; protected set; }
+        public string Error { get; protected set; }
 
-        public static ExecutionResult<T> CreateSuccessResult(T obj)
+        public static ExecutionResult CreateSuccessResult()
         {
-            return new ExecutionResult<T>
+            return new ExecutionResult
             {
-                Result = obj,
                 IsSuccess = true
             };
         }
 
-        public static ExecutionResult<T> CreateErrorResult(string error)
+        public static ExecutionResult CreateErrorResult(string error)
         {
-            return new ExecutionResult<T>
+            return new ExecutionResult
             {
                 Error = error,
                 IsSuccess = false

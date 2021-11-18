@@ -27,7 +27,7 @@ namespace Trading.Services
             _httpClient.BaseAddress = new Uri(_options.BaseUrl);
         }
 
-        public async Task<ExecutionResult<T>> ExchangeAsync<T>(string baseCurrency, string targetCurrency, double amount)
+        public async Task<ExecutionResult> ExchangeAsync<T>(string baseCurrency, string targetCurrency, double amount) where T : FiatResponseDTO
         {
             var url = $"{_options.Key}/" +
                 "pair/" +
@@ -36,10 +36,12 @@ namespace Trading.Services
                 $"{amount}";
 
             using var response = await _httpClient.GetAsync(url);
-            return response.IsSuccessStatusCode ? ExecutionResult<T>.CreateSuccessResult(await response.Content.ReadAsAsync<T>()) : ExecutionResult<T>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
+            return response.IsSuccessStatusCode 
+                ? ExecutionResult<T>.CreateSuccessResult(await response.Content.ReadAsAsync<T>()) 
+                : ExecutionResult.CreateErrorResult(await response.Content.ReadAsAsync<string>());
         }
 
-        public async Task<ExecutionResult<T>> GatRatesAsync<T>(string baseCurrency) where T : FiatResponseDTO
+        public async Task<ExecutionResult> GatRatesAsync<T>(string baseCurrency) where T : FiatResponseDTO
         {
             var url = $"{_options.Key}" +
                 "/latest/" +
@@ -51,11 +53,11 @@ namespace Trading.Services
                 var res = await response.Content.ReadAsAsync<T>();
                 res.ConversionRates.Remove(baseCurrency);
                 
-                return ExecutionResult<T>.CreateSuccessResult((T)res);
+                return ExecutionResult<T>.CreateSuccessResult(res);
             }
             else
             {
-                return ExecutionResult<T>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
+                return ExecutionResult.CreateErrorResult(await response.Content.ReadAsAsync<string>());
             }
         }
     }
