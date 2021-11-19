@@ -20,8 +20,8 @@ namespace Trading.Commands.Handlers
     public class CurrencyCommandHandler :
         IRequestHandler<CreateCurrencyCommand, bool>,
         IRequestHandler<DeleteCurrencyCommand, Currency>,
-        IRequestHandler<ExchangeFiatCurrencyCommand, ExecutionResult>,
-        IRequestHandler<ExchangeCryptoCurrencyCommand, ExecutionResult>
+        IRequestHandler<ExchangeFiatCurrencyCommand, ExecutionResult<Account>>,
+        IRequestHandler<ExchangeCryptoCurrencyCommand, ExecutionResult<Account>>
     {
         private readonly DatabaseContext _context;
         private readonly ICurrencyService<FiatResponseDTO> _fiatService;
