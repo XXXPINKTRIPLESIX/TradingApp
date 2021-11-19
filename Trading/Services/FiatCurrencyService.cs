@@ -13,7 +13,7 @@ using Trading.Common;
 
 namespace Trading.Services
 {
-    public class FiatCurrencyService : IFiatService
+    public class FiatCurrencyService : ICurrencyService<FiatResponseDTO>
     {
         private readonly HttpClient _httpClient;
         private readonly FiatApiOptions _options;
@@ -37,21 +37,21 @@ namespace Trading.Services
 
             using var response = await _httpClient.GetAsync(url);
             return response.IsSuccessStatusCode 
-                ? ExecutionResult<T>.CreateSuccessResult(await response.Content.ReadAsAsync<T>()) 
+                ? ExecutionResult<FiatResponseDTO>.CreateSuccessResult(await response.Content.ReadAsAsync<FiatResponseDTO>()) 
                 : ExecutionResult.CreateErrorResult(await response.Content.ReadAsAsync<string>());
         }
 
-        public async Task<ExecutionResult> GatRatesAsync<T>(string baseCurrency) where T : FiatResponseDTO
+        public async Task<ExecutionResult> GetRatesAsync<T>(string baseCurrencyCode) where T : FiatResponseDTO
         {
             var url = $"{_options.Key}" +
                 "/latest/" +
-                $"{baseCurrency}";
+                $"{baseCurrencyCode}";
 
             using var response = await _httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
                 var res = await response.Content.ReadAsAsync<T>();
-                res.ConversionRates.Remove(baseCurrency);
+                res.ConversionRates.Remove(baseCurrencyCode);
                 
                 return ExecutionResult<T>.CreateSuccessResult(res);
             }

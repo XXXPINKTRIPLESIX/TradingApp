@@ -12,7 +12,7 @@ using Trading.OptionBinders;
 
 namespace Trading.Services
 {
-    public class CryptoCurrencyService : ICryptoService
+    public class CryptoCurrencyService : ICurrencyService<CryptoResponseDTO>
     {
         private readonly HttpClient _httpClient;
 
@@ -45,6 +45,7 @@ namespace Trading.Services
             var url = $"exchangerate/" +
                 $"{baseCurrencyCode}/" +
                 "?invert=false";
+            
             using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
             
             var response = await _httpClient.SendAsync(requestMessage);
