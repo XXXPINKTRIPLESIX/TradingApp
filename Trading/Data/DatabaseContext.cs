@@ -15,10 +15,9 @@ namespace Trading.Data
         public DbSet<Currency> Currencies { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
-            : base(options)
-        {
+            : base(options) =>
             Database.EnsureCreated();
-        }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

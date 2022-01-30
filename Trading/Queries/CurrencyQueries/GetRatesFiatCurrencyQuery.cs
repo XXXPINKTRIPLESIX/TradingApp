@@ -8,7 +8,7 @@ using Trading.DTO.Fiat;
 
 namespace Trading.Queries.CurrencyQueries
 {
-    public class GetRatesFiatCurrencyQuery : IRequest<ExecutionResult<FiatResponseDTO>>
+    public class GetRatesFiatCurrencyQuery : IRequest<ExecutionResult>
     {
         public string BaseCurrency { get; set; }
     }

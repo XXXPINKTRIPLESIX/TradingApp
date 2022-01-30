@@ -8,7 +8,7 @@ using Trading.DTO.Crypro;
 
 namespace Trading.Queries.CurrencyQueries
 {
-    public class GetRatesCryptoCurrencyQuery : IRequest<ExecutionResult<List<CryptoResponseDTO>>>
+    public class GetRatesCryptoCurrencyQuery : IRequest<ExecutionResult>
     {
         public string BaseCurrency { get; set; }
     }

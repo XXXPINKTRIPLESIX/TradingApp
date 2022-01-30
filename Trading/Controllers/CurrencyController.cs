@@ -23,11 +23,8 @@ namespace Trading.Controllers
         private readonly ILogger<CurrencyController> _logger;
         private readonly IMediator _mediator;
 
-        public CurrencyController(ILogger<CurrencyController> logger, IMediator mediator)
-        {
-            _logger = logger;
-            _mediator = mediator;
-        }
+        public CurrencyController(ILogger<CurrencyController> logger, IMediator mediator) => 
+            (_logger, _mediator) = (logger, mediator);
 
         [HttpGet]
         [ProducesResponseType(typeof(List<Account>), StatusCodes.Status200OK)]
@@ -41,7 +38,7 @@ namespace Trading.Controllers
             return StatusCode(code, res);
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(Currency), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get([FromRoute] GetCurrencyQuery query)

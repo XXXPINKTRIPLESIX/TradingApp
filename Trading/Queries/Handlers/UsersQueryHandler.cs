@@ -17,19 +17,14 @@ namespace Trading.Queries.Handlers
     {
         private readonly DatabaseContext _context;
 
-        public UsersQueryHandler(DatabaseContext context)
-        {
-            _context = context;
-        }
+        public UsersQueryHandler(DatabaseContext context) => _context = context;
 
-        public async Task<User> Handle(GetUserQuery request, CancellationToken cancellationToken)
-        {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
-        }
+        public async Task<User> Handle(GetUserQuery request, CancellationToken cancellationToken) =>
+             await _context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
 
-        public async Task<List<User>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
-        {
-            return await _context.Users.ToListAsync(cancellationToken);
-        }
+
+        public async Task<List<User>> Handle(GetUsersQuery request, CancellationToken cancellationToken) =>
+             await _context.Users.ToListAsync(cancellationToken);
+
     }
 }

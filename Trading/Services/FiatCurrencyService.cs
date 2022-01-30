@@ -27,7 +27,7 @@ namespace Trading.Services
             _httpClient.BaseAddress = new Uri(_options.BaseUrl);
         }
 
-        public async Task<ExecutionResult<T>> ExchangeAsync<T>(string baseCurrency, string targetCurrency, double amount)
+        public async Task<ExecutionResult> ExchangeAsync(string baseCurrency, string targetCurrency, double amount)
         {
             var url = $"{_options.Key}/" +
                 "pair/" +
@@ -36,10 +36,12 @@ namespace Trading.Services
                 $"{amount}";
 
             using var response = await _httpClient.GetAsync(url);
-            return response.IsSuccessStatusCode ? ExecutionResult<T>.CreateSuccessResult(await response.Content.ReadAsAsync<T>()) : ExecutionResult<T>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
+            return response.IsSuccessStatusCode
+                ? ExecutionResult<FiatResponseDTO>.CreateSuccess(await response.Content.ReadAsAsync<FiatResponseDTO>())
+                : ExecutionResult.CreateError(await response.Content.ReadAsAsync<string>());
         }
 
-        public async Task<ExecutionResult<T>> GatRatesAsync<T>(string baseCurrency) where T : FiatResponseDTO
+        public async Task<ExecutionResult> GatRatesAsync(string baseCurrency)
         {
             var url = $"{_options.Key}" +
                 "/latest/" +
@@ -48,15 +50,13 @@ namespace Trading.Services
             using var response = await _httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
-                var res = await response.Content.ReadAsAsync<T>();
+                var res = await response.Content.ReadAsAsync<FiatResponseDTO>();
                 res.ConversionRates.Remove(baseCurrency);
-                
-                return ExecutionResult<T>.CreateSuccessResult((T)res);
+
+                return ExecutionResult<FiatResponseDTO>.CreateSuccess(res);
             }
             else
-            {
-                return ExecutionResult<T>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
-            }
+                return ExecutionResult.CreateError(await response.Content.ReadAsAsync<string>());
         }
     }
 }

@@ -8,7 +8,7 @@ using Trading.DTO.Fiat;
 
 namespace Trading.Commands.CurrencyCommands
 {
-    public class ExchangeFiatCurrencyCommand : IRequest<ExecutionResult<FiatResponseDTO>>
+    public class ExchangeFiatCurrencyCommand : IRequest<ExecutionResult>
     {
         public int AccountId { get; set; }
         public int TargetAccountId { get; set; }

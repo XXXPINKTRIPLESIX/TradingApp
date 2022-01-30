@@ -7,14 +7,14 @@ namespace Trading.Data.Models
 {
     public static class DefaultDataProvider
     {
-        public static List<User> GetUsers()
-        {
+        public static List<User> GetUsers() =>
+
             //List<Account> accounts = new List<Account>()
             //{
             //    new Account()
             //};
 
-            return new List<User>
+            new List<User>
             {
                 new User(1, "111", "111", "111@gmail.com", "admin"),
                 new User(2, "222", "222", "222@gmail.com", "user"),
@@ -23,11 +23,10 @@ namespace Trading.Data.Models
                 new User(5, "555", "555", "555@gmail.com", "user"),
                 new User(6, "666", "666", "666@gmail.com", "user")
             };
-        }
 
-        public static List<Currency> GetCurrencies()
-        {
-            return new List<Currency>
+
+        public static List<Currency> GetCurrencies() =>
+             new List<Currency>
             {
                 new Currency(1, "USD", CurrencyType.Fiat),
                 new Currency(2, "EUR", CurrencyType.Fiat),
@@ -44,7 +43,7 @@ namespace Trading.Data.Models
                 new Currency(12, "USDC", CurrencyType.Crypto),
 
             };
-        }
+
     }
 }
 

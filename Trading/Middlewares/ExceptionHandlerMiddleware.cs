@@ -12,10 +12,8 @@ namespace Trading.Middlewares
     {
         private readonly RequestDelegate _next;
 
-        public ExceptionHandlerMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
+        public ExceptionHandlerMiddleware(RequestDelegate next) => _next = next;
+        
 
         public async Task Invoke(HttpContext context) 
         {

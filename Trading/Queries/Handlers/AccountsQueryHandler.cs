@@ -17,10 +17,7 @@ namespace Trading.Queries.Handlers
     {
         private readonly DatabaseContext _context;
 
-        public AccountsQueryHandler(DatabaseContext context)
-        {
-            _context = context;
-        }
+        public AccountsQueryHandler(DatabaseContext context) => _context = context;
 
         public async Task<Account> Handle(GetAccountQuery request, CancellationToken cancellationToken)
         {

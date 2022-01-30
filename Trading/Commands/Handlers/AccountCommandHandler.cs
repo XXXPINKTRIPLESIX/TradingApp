@@ -17,10 +17,7 @@ namespace Trading.Commands.Handlers
     {
         private readonly DatabaseContext _context;
 
-        public AccountCommandHandler(DatabaseContext context)
-        {
-            _context = context;
-        }
+        public AccountCommandHandler(DatabaseContext context) => _context = context;
 
         public async Task<bool> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
         {

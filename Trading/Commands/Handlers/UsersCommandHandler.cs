@@ -21,10 +21,8 @@ namespace Trading.Commands.Handlers
     {
         private readonly DatabaseContext _context;
 
-        public UsersCommandHandler(DatabaseContext context)
-        {
-            _context = context;
-        }
+        public UsersCommandHandler(DatabaseContext context) => 
+            _context = context; 
 
         public async Task<bool> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {

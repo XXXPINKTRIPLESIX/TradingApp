@@ -26,7 +26,7 @@ namespace Trading.Services
             _httpClient.DefaultRequestHeaders.Add(options.Header, options.Key);
         }
 
-        public async Task<ExecutionResult<T>> ExchangeAsync<T>(string baseCurrencyCode, string targetCurrency, double amount)
+        public async Task<ExecutionResult> ExchangeAsync(string baseCurrencyCode, string targetCurrency, double amount)
         {
             var url = $"exchangerate/" +
                 $"{baseCurrencyCode}/" +
@@ -35,19 +35,24 @@ namespace Trading.Services
             using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await _httpClient.SendAsync(requestMessage);
 
-            return response.IsSuccessStatusCode ? ExecutionResult<T>.CreateSuccessResult(await response.Content.ReadAsAsync<T>()) : ExecutionResult<T>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
+            return response.IsSuccessStatusCode 
+                ? ExecutionResult<CryptoResponseDTO>.CreateSuccess(await response.Content.ReadAsAsync<CryptoResponseDTO>()) 
+                : ExecutionResult.CreateError(await response.Content.ReadAsAsync<string>());
         }
 
-        public async Task<ExecutionResult<List<T>>> GetRatesAsync<T>(string baseCurrencyCode)
+        public async Task<ExecutionResult> GetRatesAsync(string baseCurrencyCode)
         {
             var url = $"exchangerate/" +
                 $"{baseCurrencyCode}/" +
                 "?invert=false";
+
             using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
             
             var response = await _httpClient.SendAsync(requestMessage);
 
-            return response.IsSuccessStatusCode ? ExecutionResult<List<T>>.CreateSuccessResult(await response.Content.ReadAsAsync<List<T>>()) : ExecutionResult<List<T>>.CreateErrorResult(await response.Content.ReadAsAsync<string>());
+            return response.IsSuccessStatusCode ? 
+                ExecutionResult<List<CryptoResponseDTO>>.CreateSuccess(await response.Content.ReadAsAsync<List<CryptoResponseDTO>>()) 
+                : ExecutionResult.CreateError(await response.Content.ReadAsAsync<string>());
         }
     }
 }

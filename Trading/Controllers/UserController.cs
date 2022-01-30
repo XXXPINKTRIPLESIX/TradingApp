@@ -19,11 +19,8 @@ namespace Trading.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IMediator _mediator;
 
-        public UserController(ILogger<UserController> logger, IMediator mediator)
-        {
-            _logger = logger;
-            _mediator = mediator;
-        }
+        public UserController(ILogger<UserController> logger, IMediator mediator) => 
+            (_logger, _mediator) = (logger, mediator);
 
         [HttpGet]
         [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
@@ -37,7 +34,7 @@ namespace Trading.Controllers
             return StatusCode(code, res);
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get([FromRoute] GetUserQuery query)

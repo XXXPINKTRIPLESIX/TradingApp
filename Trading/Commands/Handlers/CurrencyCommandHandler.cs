@@ -19,19 +19,15 @@ namespace Trading.Commands.Handlers
     public class CurrencyCommandHandler :
         IRequestHandler<CreateCurrencyCommand, bool>,
         IRequestHandler<DeleteCurrencyCommand, Currency>,
-        IRequestHandler<ExchangeFiatCurrencyCommand, ExecutionResult<FiatResponseDTO>>,
-        IRequestHandler<ExchangeCryptoCurrencyCommand, ExecutionResult<CryptoResponseDTO>>
+        IRequestHandler<ExchangeFiatCurrencyCommand, ExecutionResult>,
+        IRequestHandler<ExchangeCryptoCurrencyCommand, ExecutionResult>
     {
         private readonly DatabaseContext _context;
-        private readonly FiatCurrencyService _fiatService;
-        private readonly CryptoCurrencyService _cryptoService;
+        private readonly IFiatService _fiatService;
+        private readonly ICryptoService _cryptoService;
 
-        public CurrencyCommandHandler(DatabaseContext context, IFiatService fiatService, ICryptoService cryptoService)
-        {
-            _context = context;
-            _fiatService = fiatService as FiatCurrencyService;
-            _cryptoService = cryptoService as CryptoCurrencyService;
-        }
+        public CurrencyCommandHandler(DatabaseContext context, IFiatService fiatService, ICryptoService cryptoService) =>
+            (_context, _fiatService, _cryptoService) = (context, fiatService, cryptoService);
 
         public async Task<bool> Handle(CreateCurrencyCommand request, CancellationToken cancellationToken)
         {
@@ -58,7 +54,7 @@ namespace Trading.Commands.Handlers
             return currency;
         }
 
-        public async Task<ExecutionResult<FiatResponseDTO>> Handle(ExchangeFiatCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<ExecutionResult> Handle(ExchangeFiatCurrencyCommand request, CancellationToken cancellationToken)
         {
             Account account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.AccountId);
             Account targetAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.TargetAccountId);
@@ -80,7 +76,7 @@ namespace Trading.Commands.Handlers
 
             account.Amount -= request.Amount;
 
-            var result = await ExchangeFiat<FiatResponseDTO>(account.Currency.CurrencyCode, targetAccount.Currency.CurrencyCode, request.Amount);
+            var result = await ExchangeFiat(account.Currency.CurrencyCode, targetAccount.Currency.CurrencyCode, request.Amount) as ExecutionResult<FiatResponseDTO>;
 
             if(result.Error == null) 
             {
@@ -92,7 +88,7 @@ namespace Trading.Commands.Handlers
             throw new NotImplementedException(); 
         }
 
-        public async Task<ExecutionResult<CryptoResponseDTO>> Handle(ExchangeCryptoCurrencyCommand request, CancellationToken cancellationToken)
+        public async Task<ExecutionResult> Handle(ExchangeCryptoCurrencyCommand request, CancellationToken cancellationToken)
         {
             var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.AccountId);
             var targetAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == request.TargetAccountId);
@@ -109,10 +105,10 @@ namespace Trading.Commands.Handlers
 
             if (account.Amount < request.Amount)
             {
-                return ExecutionResult<CryptoResponseDTO>.CreateErrorResult($"{account.Amount} less than {request.Amount}");
+                return ExecutionResult.CreateError($"{account.Amount} less than {request.Amount}");
             }
 
-            var response = await ExchangeCrypto<CryptoResponseDTO>(account.Currency.CurrencyCode, targetAccount.Currency.CurrencyCode, request.Amount);
+            var response = await ExchangeCrypto(account.Currency.CurrencyCode, targetAccount.Currency.CurrencyCode, request.Amount) as ExecutionResult<CryptoResponseDTO>;
 
             account.Amount -= request.Amount;
 
@@ -126,14 +122,14 @@ namespace Trading.Commands.Handlers
             throw new NotImplementedException();
         }
 
-        private async Task<ExecutionResult<T>> ExchangeFiat<T>(string baseCurrency, string targetCurrency, double amount) 
+        private async Task<ExecutionResult> ExchangeFiat(string baseCurrency, string targetCurrency, double amount) 
         {
-            return await _fiatService.ExchangeAsync<T>(baseCurrency, targetCurrency, amount);
+            return await _fiatService.ExchangeAsync(baseCurrency, targetCurrency, amount);
         }
 
-        private async Task<ExecutionResult<T>> ExchangeCrypto<T>(string baseCurrency, string targetCurrency, double amount)
+        private async Task<ExecutionResult> ExchangeCrypto(string baseCurrency, string targetCurrency, double amount)
         {
-            return await _cryptoService.ExchangeAsync<T>(baseCurrency, targetCurrency, amount);
+            return await _cryptoService.ExchangeAsync(baseCurrency, targetCurrency, amount);
         }
     }
 }

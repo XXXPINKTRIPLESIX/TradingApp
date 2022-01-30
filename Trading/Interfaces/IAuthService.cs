@@ -7,5 +7,6 @@ namespace Trading.Interfaces
 {
     public interface IAuthService
     {
+        public Task<object> GetTokenAsync(string login, string password);
     }
 }

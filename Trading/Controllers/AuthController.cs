@@ -18,11 +18,8 @@ namespace Trading.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly IMediator _mediator;
 
-        public AuthController(ILogger<AuthController> logger, IMediator mediator)
-        {
-            _logger = logger;
-            _mediator = mediator;
-        }
+        public AuthController(ILogger<AuthController> logger, IMediator mediator) => 
+            (_logger, _mediator) = (logger, mediator);
 
         [HttpPost]
         [Route("token")]
