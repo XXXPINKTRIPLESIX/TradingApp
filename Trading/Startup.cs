@@ -23,6 +23,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Trading.Middlewares;
 using System.Net.Http.Headers;
+using Trading.DTO.Crypro;
+using Trading.DTO.Fiat;
 using Trading.OptionBinders;
 
 namespace Trading
@@ -45,26 +47,11 @@ namespace Trading
                 ));
 
             //Services
-            services.AddTransient<IFiatService, FiatCurrencyService>();
-            services.AddTransient<ICryptoService, CryptoCurrencyService>();
+            services.AddTransient(typeof(ICurrencyService<FiatResponseDTO>), typeof(FiatCurrencyService));
+            services.AddTransient(typeof(ICurrencyService<CryptoResponseDTO>), typeof(CryptoCurrencyService));
             services.AddTransient<IAuthService, AuthService>();
 
             services.AddHttpClient();
-
-            //FiatApiOptions fiatOptions = Configuration.GetSection(FiatApiOptions.FiatApi).Get<FiatApiOptions>();
-
-            //services.AddHttpClient<IFiatService, FiatCurrencyService>(client => 
-            //{
-            //    client.BaseAddress = new Uri(fiatOptions.BaseUrl);
-            //});
-
-            //CryptoApiOptions cryptoOptions = Configuration.GetSection(CryptoApiOptions.CryptoApi).Get<CryptoApiOptions>();
-
-            //services.AddHttpClient<ICryptoService, CryptoCurrencyService>(client =>
-            //{
-            //    client.BaseAddress = new Uri(cryptoOptions.BaseUrl);
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(cryptoOptions.Header, cryptoOptions.Key);
-            //});
 
             //MediatR
             services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.GetExecutingAssembly());
@@ -98,8 +85,8 @@ namespace Trading
             {
                 app.UseDeveloperExceptionPage();
             }
-            //Custom Exception Handler
-            app.UseExceptionHandlerMiddleware();
+            
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 

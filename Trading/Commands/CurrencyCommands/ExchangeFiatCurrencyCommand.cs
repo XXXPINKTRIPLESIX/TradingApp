@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Trading.Common;
-using Trading.DTO.Fiat;
+using Trading.Data.Models;
 
 namespace Trading.Commands.CurrencyCommands
 {
+<<<<<<< HEAD
     public class ExchangeFiatCurrencyCommand : IRequest<ExecutionResult>
+=======
+    public class ExchangeFiatCurrencyCommand : IRequest<ExecutionResult<Account>>
+>>>>>>> 49fbae1b169b8d35e3920b48a9599495e5d661a6
     {
         public int AccountId { get; set; }
         public int TargetAccountId { get; set; }

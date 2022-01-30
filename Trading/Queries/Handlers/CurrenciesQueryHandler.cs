@@ -23,6 +23,7 @@ namespace Trading.Queries.Handlers
         IRequestHandler<GetRatesCryptoCurrencyQuery, ExecutionResult>
     {
         private readonly DatabaseContext _context;
+<<<<<<< HEAD
         private readonly IFiatService _fiatService;
         private readonly ICryptoService _cryptoService;
 
@@ -44,5 +45,36 @@ namespace Trading.Queries.Handlers
         public async Task<ExecutionResult> Handle(GetRatesCryptoCurrencyQuery request, CancellationToken cancellationToken) =>
              await _cryptoService.GetRatesAsync(request.BaseCurrency);
 
+=======
+        private readonly ICurrencyService<FiatResponseDTO> _fiatService;
+        private readonly ICurrencyService<CryptoResponseDTO> _cryptoService;
+
+        public CurrenciesQueryHandler(DatabaseContext context, ICurrencyService<FiatResponseDTO> fiatService, ICurrencyService<CryptoResponseDTO> cryptoService)
+        {
+            _context = context;
+            _fiatService = fiatService;
+            _cryptoService = cryptoService;
+        }
+
+        public async Task<Currency> Handle(GetCurrencyQuery request, CancellationToken cancellationToken)
+        {
+            return await _context.Currencies.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+        }
+
+        public async Task<List<Currency>> Handle(GetCurrenciesQuery request, CancellationToken cancellationToken)
+        {
+            return await _context.Currencies.ToListAsync(cancellationToken);
+        }
+
+        public async Task<ExecutionResult> Handle(GetRatesFiatCurrencyQuery request, CancellationToken cancellationToken)
+        {
+            return await _fiatService.GetRatesAsync<FiatResponseDTO>(request.BaseCurrency);
+        }
+
+        public async Task<ExecutionResult> Handle(GetRatesCryptoCurrencyQuery request, CancellationToken cancellationToken)
+        {
+            return await _cryptoService.GetRatesAsync<CryptoResponseDTO>(request.BaseCurrency);
+        }
+>>>>>>> 49fbae1b169b8d35e3920b48a9599495e5d661a6
     }
 }

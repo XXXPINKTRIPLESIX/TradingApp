@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Trading.Commands.CurrencyCommands;
 using Trading.Common;
@@ -83,9 +84,9 @@ namespace Trading.Controllers
         {
             var res = await _mediator.Send(command);
 
-            var code = res.IsSuccess ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
-            
-            return StatusCode(code, res.Result);
+            return res.IsSuccess 
+                ? StatusCode(StatusCodes.Status200OK, res.Result) 
+                : StatusCode(StatusCodes.Status400BadRequest, res.Error);
         }
 
         [HttpGet]
@@ -95,10 +96,10 @@ namespace Trading.Controllers
         public async Task<IActionResult> FiatCurrencyRates([FromQuery] GetRatesFiatCurrencyQuery query)
         {
             var res = await _mediator.Send(query);
-            
-            var code = res.IsSuccess ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
 
-            return StatusCode(code, res);
+            return res.IsSuccess
+                ? StatusCode(StatusCodes.Status200OK, res.Result)
+                : StatusCode(StatusCodes.Status400BadRequest, res.Error);
         }
 
         [HttpPost]
@@ -109,9 +110,9 @@ namespace Trading.Controllers
         {
             var res = await _mediator.Send(command);
 
-            var code = res.IsSuccess ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
-
-            return StatusCode(code, res);
+            return res.IsSuccess
+                ? StatusCode(StatusCodes.Status200OK, res.Result)
+                : StatusCode(StatusCodes.Status400BadRequest, res.Error);
         }
 
         [HttpGet]
@@ -124,7 +125,9 @@ namespace Trading.Controllers
 
             var code = res.IsSuccess ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest;
 
-            return StatusCode(code, res);
+            return res.IsSuccess
+                ? StatusCode(StatusCodes.Status200OK, res.Result)
+                : StatusCode(StatusCodes.Status400BadRequest, res.Error);
         }
     }
 }

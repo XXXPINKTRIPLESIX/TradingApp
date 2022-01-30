@@ -12,7 +12,7 @@ using Trading.OptionBinders;
 
 namespace Trading.Services
 {
-    public class CryptoCurrencyService : ICryptoService
+    public class CryptoCurrencyService : ICurrencyService<CryptoResponseDTO>
     {
         private readonly HttpClient _httpClient;
 
@@ -26,7 +26,11 @@ namespace Trading.Services
             _httpClient.DefaultRequestHeaders.Add(options.Header, options.Key);
         }
 
+<<<<<<< HEAD
         public async Task<ExecutionResult> ExchangeAsync(string baseCurrencyCode, string targetCurrency, double amount)
+=======
+        public async Task<ExecutionResult> ExchangeAsync<T>(string baseCurrencyCode, string targetCurrency, double amount) where T : CryptoResponseDTO
+>>>>>>> 49fbae1b169b8d35e3920b48a9599495e5d661a6
         {
             var url = $"exchangerate/" +
                 $"{baseCurrencyCode}/" +
@@ -36,23 +40,41 @@ namespace Trading.Services
             var response = await _httpClient.SendAsync(requestMessage);
 
             return response.IsSuccessStatusCode 
+<<<<<<< HEAD
                 ? ExecutionResult<CryptoResponseDTO>.CreateSuccess(await response.Content.ReadAsAsync<CryptoResponseDTO>()) 
                 : ExecutionResult.CreateError(await response.Content.ReadAsAsync<string>());
         }
 
         public async Task<ExecutionResult> GetRatesAsync(string baseCurrencyCode)
+=======
+                ? ExecutionResult<T>.CreateSuccessResult(await response.Content.ReadAsAsync<T>()) 
+                : ExecutionResult.CreateErrorResult(await response.Content.ReadAsAsync<string>());
+        }
+
+        public async Task<ExecutionResult> GetRatesAsync<T>(string baseCurrencyCode) where T : CryptoResponseDTO
+>>>>>>> 49fbae1b169b8d35e3920b48a9599495e5d661a6
         {
             var url = $"exchangerate/" +
                 $"{baseCurrencyCode}/" +
                 "?invert=false";
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> 49fbae1b169b8d35e3920b48a9599495e5d661a6
             using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
             
             var response = await _httpClient.SendAsync(requestMessage);
 
+<<<<<<< HEAD
             return response.IsSuccessStatusCode ? 
                 ExecutionResult<List<CryptoResponseDTO>>.CreateSuccess(await response.Content.ReadAsAsync<List<CryptoResponseDTO>>()) 
                 : ExecutionResult.CreateError(await response.Content.ReadAsAsync<string>());
+=======
+            return response.IsSuccessStatusCode 
+                ? ExecutionResult<List<T>>.CreateSuccessResult(await response.Content.ReadAsAsync<List<T>>()) 
+                : ExecutionResult.CreateErrorResult(await response.Content.ReadAsAsync<string>());
+>>>>>>> 49fbae1b169b8d35e3920b48a9599495e5d661a6
         }
     }
 }
